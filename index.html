@@ -70,14 +70,8 @@
 
     <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-    <!-- TAKİP NOKTALARI (GÖRÜNMEZ ÇAPALAR) -->
-    <a-entity id="tracker-0" mindar-image-target="targetIndex: 0"></a-entity>
-    <a-entity id="tracker-1" mindar-image-target="targetIndex: 1"></a-entity>
-    <a-entity id="tracker-2" mindar-image-target="targetIndex: 2"></a-entity>
-    <a-entity id="tracker-3" mindar-image-target="targetIndex: 3"></a-entity>
-
     <!-- ── HEDEF #0 GÖRSELLERİ (MEYVE SUYU) ── -->
-    <a-entity id="visual-0" smooth-tracker="target: #tracker-0; speed: 0.25">
+    <a-entity mindar-image-target="targetIndex: 0">
       <!-- ARMUT — SOL TARAF -->
       <a-entity id="armut-group" position="-0.35 0 0.05">
         <a-plane width="0.38" height="0.38" position="0 0.1 -0.01" material="color:#0d1117; transparent:true; opacity:0.85; shader:flat;"></a-plane>
@@ -108,7 +102,7 @@
     </a-entity>
 
     <!-- ── HEDEF #1 GÖRSELLERİ (KASK) ── -->
-    <a-entity id="visual-1" smooth-tracker="target: #tracker-1; speed: 0.25">
+    <a-entity mindar-image-target="targetIndex: 1">
       <a-entity position="0 0.5 0.05">
         <a-plane width="1.1" height="0.4" position="0 0 -0.002" material="color:#0d1117; transparent:true; opacity:0.9; shader:flat;"></a-plane>
         <a-plane width="1.13" height="0.43" position="0 0 -0.003" material="color:#3b82f6; transparent:true; opacity:0.4; shader:flat;"></a-plane>
@@ -119,7 +113,7 @@
     </a-entity>
 
     <!-- ── HEDEF #2 GÖRSELLERİ (BURCU) ── -->
-    <a-entity id="visual-2" smooth-tracker="target: #tracker-2; speed: 0.25">
+    <a-entity mindar-image-target="targetIndex: 2">
       <a-entity position="0 0.4 0.05">
         <a-plane width="1.2" height="0.3" position="0 0 -0.002" material="color:#0d1117; transparent:true; opacity:0.85; shader:flat;"></a-plane>
         <a-plane width="1.23" height="0.33" position="0 0 -0.003" material="color:#ec4899; transparent:true; opacity:0.5; shader:flat;"></a-plane>
@@ -128,7 +122,7 @@
     </a-entity>
 
     <!-- ── HEDEF #3 GÖRSELLERİ (MEHPARE MÜDÜR) ── -->
-    <a-entity id="visual-3" smooth-tracker="target: #tracker-3; speed: 0.25">
+    <a-entity mindar-image-target="targetIndex: 3">
       <a-entity position="0 0.4 0.05">
         <a-plane width="1.2" height="0.3" position="0 0 -0.002" material="color:#0d1117; transparent:true; opacity:0.85; shader:flat;"></a-plane>
         <a-plane width="1.23" height="0.33" position="0 0 -0.003" material="color:#f59e0b; transparent:true; opacity:0.5; shader:flat;"></a-plane>
@@ -139,51 +133,6 @@
   </a-scene>
 
   <script>
-    // ── KESİN TİTREME ÇÖZÜCÜ: YUMUŞAK TAKİP SİSTEMİ ──
-    AFRAME.registerComponent('smooth-tracker', {
-      schema: {
-        target: {type: 'selector'},
-        speed: {type: 'number', default: 0.2}
-      },
-      init: function () {
-        this.wasVisible = false;
-        // Başlangıçta görünmez yap
-        this.el.object3D.visible = false;
-      },
-      tick: function (time, timeDelta) {
-        const targetEl = this.data.target;
-        // Hedef obje veya 3D nesnesi henüz yüklenmediyse bekle
-        if (!targetEl || !targetEl.object3D) return;
-
-        const target3D = targetEl.object3D;
-        const el3D = this.el.object3D;
-
-        // Hedef AR noktasının görünürlüğünü kontrol et
-        const isVisible = target3D.visible;
-        el3D.visible = isVisible;
-
-        if (isVisible) {
-          if (!this.wasVisible) {
-            // Hedef kameraya yeni girdiyse, animasyonsuz anında ışınla
-            el3D.position.copy(target3D.position);
-            el3D.quaternion.copy(target3D.quaternion);
-            el3D.scale.copy(target3D.scale);
-            this.wasVisible = true;
-          } else {
-            // Zaman sapmasını önlemek için fallback
-            const dt = timeDelta || 16.66;
-            const lerpFactor = Math.min(this.data.speed * (dt / 16.66), 1.0);
-            
-            el3D.position.lerp(target3D.position, lerpFactor);
-            el3D.quaternion.slerp(target3D.quaternion, lerpFactor);
-            el3D.scale.lerp(target3D.scale, lerpFactor);
-          }
-        } else {
-          this.wasVisible = false;
-        }
-      }
-    });
-
     // ── HEDEF EVENTLARI ─────────────────────────────────
     document.querySelector('a-scene').addEventListener('loaded', function () {
       const targets = document.querySelectorAll('[mindar-image-target]');
