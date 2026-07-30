@@ -57,6 +57,19 @@
     .bar { height:100%; background: linear-gradient(90deg,#f97316,#eab308); border-radius:99px; animation: prog 3s ease-in-out forwards; }
     @keyframes prog { 0%{width:0%} 100%{width:100%} }
 
+    #start-btn {
+      margin-top: 8px;
+      padding: 14px 40px;
+      font-size: 16px; font-weight: 700;
+      color: #fff;
+      background: linear-gradient(135deg, #f97316, #eab308);
+      border: none; border-radius: 99px;
+      cursor: pointer;
+      box-shadow: 0 0 24px rgba(249,115,22,0.5);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    #start-btn:active { transform: scale(0.96); box-shadow: 0 0 12px rgba(249,115,22,0.3); }
+
     /* HUD */
     #hud {
       position: fixed; top: 0; left: 0; right: 0; z-index: 200;
@@ -110,6 +123,7 @@
     <div class="loading-title">Meyve Suyu AR</div>
     <div class="loading-sub">Kamera hazırlanıyor…<br>Kamera iznini kabul et</div>
     <div class="bar-wrap"><div class="bar"></div></div>
+    <button id="start-btn" onclick="startAR()">📷 Kamerayı Başlat</button>
   </div>
 
   <!-- HUD -->
@@ -138,7 +152,7 @@
        1 birim ≈ hedef görselin genişliği
   ══════════════════════════════════════ -->
   <a-scene
-    mindar-image="imageTargetSrc: ./targets.mind; autoStart: true; uiLoading: no; uiScanning: no; uiError: no;"
+    mindar-image="imageTargetSrc: ./targets.mind; autoStart: false; uiLoading: no; uiScanning: no; uiError: no;"
     color-space="sRGB"
     renderer="colorManagement: true; antialias: true;"
     vr-mode-ui="enabled: false"
@@ -248,11 +262,29 @@
     const frame   = document.getElementById('frame');
     const hint    = document.getElementById('hint');
 
-    function hideLoading() {
-      loading.classList.add('hidden');
-      setTimeout(() => loading.style.display = 'none', 600);
+    // Kullanıcı butona basınca AR başlar
+    // iOS kamera izni için MUTLAKA kullanıcı dokunuşu gerekir
+    function startAR() {
+      const btn = document.getElementById('start-btn');
+      btn.textContent = '⏳ Yükleniyor...';
+      btn.disabled = true;
+
+      // A-Frame sahnesi yüklendikten sonra MindAR'ı başlat
+      function beginTracking() {
+        const mindarSystem = scene.systems && scene.systems['mindar-image-system'];
+        if (mindarSystem) {
+          mindarSystem.start();
+        }
+        loading.classList.add('hidden');
+        setTimeout(() => loading.style.display = 'none', 600);
+      }
+
+      if (scene.hasLoaded) {
+        beginTracking();
+      } else {
+        scene.addEventListener('loaded', beginTracking);
+      }
     }
-    scene.hasLoaded ? hideLoading() : scene.addEventListener('loaded', hideLoading);
 
     const target = document.querySelector('[mindar-image-target]');
     if (target) {
