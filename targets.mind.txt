@@ -1,0 +1,19 @@
+# targets.mind — PLACEHOLDER
+
+Bu dosya gerçek görsel hedefi içermez.
+Aşağıdaki adımları izleyerek kendi targets.mind dosyanı oluştur:
+
+1. Meyve suyu kutusunun ön yüzünü NET biçimde fotoğrafla
+   (düz açı, iyi ışık, gölge yok)
+
+2. Şu siteye git:
+   https://hiukim.github.io/mind-ar-js-doc/tools/compile
+
+3. Fotoğrafı siteye yükle → "Compile" düğmesine bas
+
+4. İndirilen targets.mind dosyasını bu klasöre koy
+   (Bu placeholder dosyasının yerine geçmeli)
+
+5. index.html'i yeniden aç / sayfayı yenile
+
+Daha fazla bilgi: https://hiukim.github.io/mind-ar-js-doc/
