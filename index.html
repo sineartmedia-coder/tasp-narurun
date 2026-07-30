@@ -78,7 +78,7 @@
        Resmi dokümandan alınan minimal yapı
   ════════════════════════════════════ -->
   <a-scene
-    mindar-image="imageTargetSrc: ./targets.mind; autoStart: true; uiLoading: no; uiScanning: no; uiError: no; filterMinCF: 0.001; filterBeta: 0.01;"
+    mindar-image="imageTargetSrc: ./targets.mind; autoStart: true; uiLoading: no; uiScanning: no; uiError: no; filterMinCF: 0.0001; filterBeta: 0.001; warmupTolerance: 5; missTolerance: 10;"
     color-space="sRGB"
     renderer="colorManagement: true; physicallyCorrectLights: true"
     vr-mode-ui="enabled: false"
@@ -94,9 +94,8 @@
     <a-entity mindar-image-target="targetIndex: 0">
 
       <!-- SOL: ARMUT — x=-0.55 (kutunun sol tarafı) -->
-      <!-- Float animasyonu: y ekseni ±0.015 ile çok küçük, 3sn'de bir -->
-      <a-entity position="-0.55 0 0.05"
-        animation__float="property:position;from:-0.55 0.015 0.05;to:-0.55 -0.015 0.05;dur:3000;dir:alternate;loop:true;easing:easeInOutSine;">
+      <!-- z=0 olursa tracking daha stabil, float animasyonu yok -->
+      <a-entity position="-0.55 0 0">
         <a-image src="#armut-img" position="0 0.15 0" width="0.35" height="0.35"
           material="alphaTest:0.1;transparent:true;"></a-image>
         <a-text value="Armut Ozu" position="0 -0.07 0" align="center" color="#fbbf24" width="1.2"></a-text>
@@ -104,9 +103,7 @@
       </a-entity>
 
       <!-- SAĞ: ELMA — x=+0.55 (kutunun sağ tarafı) -->
-      <!-- Float animasyonu: y ekseni ±0.015 ile çok küçük, ters faz -->
-      <a-entity position="0.55 0 0.05"
-        animation__float="property:position;from:0.55 -0.015 0.05;to:0.55 0.015 0.05;dur:3000;dir:alternate;loop:true;easing:easeInOutSine;">
+      <a-entity position="0.55 0 0">
         <a-image src="#elma-img" position="0 0.15 0" width="0.35" height="0.35"
           material="alphaTest:0.1;transparent:true;"></a-image>
         <a-text value="Elma Ozu" position="0 -0.07 0" align="center" color="#f87171" width="1.2"></a-text>
