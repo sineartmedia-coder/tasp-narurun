@@ -5,15 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <title>Meyve Suyu AR</title>
 
-  <!-- A-Frame 1.4.2 — MindAR 1.2.5'in desteklediği versiyon -->
+  <!-- A-Frame 1.4.2 — MindAR 1.2.5 ile uyumlu -->
   <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
-  <!-- MindAR A-Frame eklentisi -->
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 
   <style>
     body { margin: 0; overflow: hidden; }
 
-    /* Splash — kamera yüklenirken göster */
     #splash {
       position: fixed; inset: 0; z-index: 9999;
       background: #0d1117;
@@ -23,31 +21,20 @@
       transition: opacity 0.4s;
     }
     #splash.out { opacity: 0; pointer-events: none; }
-
-    #splash h1 { font-size: 22px; margin: 0; }
-    #splash p  { font-size: 14px; color: #8b949e; text-align: center; max-width: 260px; margin: 0; }
-
+    #splash h1  { font-size: 22px; margin: 0; }
+    #splash p   { font-size: 14px; color: #8b949e; text-align: center; max-width: 260px; margin: 0; }
     #splash button {
       padding: 14px 48px; font-size: 17px; font-weight: 700;
       background: linear-gradient(135deg, #f97316, #eab308);
       border: none; border-radius: 99px; color: #000; cursor: pointer;
     }
 
-    /* Tarama çerçevesi ve ipucu */
-    #ui {
-      position: fixed; inset: 0; z-index: 100;
-      pointer-events: none;
-      font-family: system-ui, sans-serif;
-    }
-
+    #ui { position: fixed; inset: 0; z-index: 100; pointer-events: none; font-family: system-ui, sans-serif; }
     #frame-box {
-      position: absolute; top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
       width: 200px; height: 280px;
-      border: 2px solid rgba(249,115,22,0.6);
-      border-radius: 8px;
+      border: 2px solid rgba(249,115,22,0.6); border-radius: 8px;
     }
-
     #ui-bottom {
       position: absolute; bottom: 30px; left: 0; right: 0;
       text-align: center; color: rgba(255,255,255,0.8); font-size: 14px;
@@ -56,27 +43,19 @@
 </head>
 <body>
 
-  <!-- Splash ekranı -->
   <div id="splash">
     <div style="font-size:50px">🍹</div>
     <h1>Meyve Suyu AR</h1>
     <p>Meyve suyu kutusunu kameraya tut, içindekiler canlanır!</p>
-    <button onclick="document.getElementById('splash').classList.add('out')">
-      📷 Kamerayı Başlat
-    </button>
+    <button onclick="document.getElementById('splash').classList.add('out')">📷 Kamerayı Başlat</button>
     <p style="font-size:11px;color:#555">Kamera izni istenecek — İzin Ver'e bas</p>
   </div>
 
-  <!-- UI katmanı (çerçeve + ipucu) -->
   <div id="ui">
     <div id="frame-box"></div>
     <div id="ui-bottom">📦 Meyve suyu kutusunu göster</div>
   </div>
 
-  <!-- ════════════════════════════════════
-       MindAR + A-Frame sahnesi
-       Resmi dokümandan alınan minimal yapı
-  ════════════════════════════════════ -->
   <a-scene
     mindar-image="imageTargetSrc: ./targets.mind; autoStart: true; uiLoading: no; uiScanning: no; uiError: no; filterMinCF: 0.0001; filterBeta: 0.001; warmupTolerance: 5; missTolerance: 10;"
     color-space="sRGB"
@@ -93,45 +72,121 @@
 
     <a-entity mindar-image-target="targetIndex: 0">
 
-      <!-- SOL: ARMUT — x=-0.55 (kutunun sol tarafı) -->
-      <!-- z=0 olursa tracking daha stabil, float animasyonu yok -->
-      <a-entity position="-0.55 0 0">
-        <a-image src="#armut-img" position="0 0.15 0" width="0.35" height="0.35"
-          material="alphaTest:0.1;transparent:true;"></a-image>
-        <a-text value="Armut Ozu" position="0 -0.07 0" align="center" color="#fbbf24" width="1.2"></a-text>
-        <a-text value="%50" position="0 -0.17 0" align="center" color="#f59e0b" width="0.9"></a-text>
+      <!--
+        ARMUT — SOL TARAF
+        position x=-0.45: kutunun soluna 0.45 birim
+        position y=0    : kutuyla aynı yükseklik
+        position z=0    : z=0 en stabil tracking noktası
+
+        billboard component: her zaman kameraya dönük durur,
+        telefon açısı değişince DÖNSÜN değil CEPHE korusun
+      -->
+      <a-entity id="armut-group" position="-0.45 0 0" billboard>
+        <!-- Arka plan kutusu — içeriği okumayı kolaylaştırır -->
+        <a-plane
+          width="0.42" height="0.42"
+          position="0 0.1 -0.01"
+          material="color:#0d1117; transparent:true; opacity:0.75; shader:flat;">
+        </a-plane>
+
+        <!-- Armut görseli -->
+        <a-image
+          src="#armut-img"
+          position="0 0.18 0"
+          width="0.30" height="0.30"
+          material="alphaTest:0.5; transparent:true; depthWrite:false;">
+        </a-image>
+
+        <!-- Etiketler -->
+        <a-text value="Armut Ozu" position="0 -0.02 0" align="center" color="#fbbf24" width="1.1"></a-text>
+        <a-text value="%50"       position="0 -0.10 0" align="center" color="#f59e0b" width="0.85"></a-text>
       </a-entity>
 
-      <!-- SAĞ: ELMA — x=+0.55 (kutunun sağ tarafı) -->
-      <a-entity position="0.55 0 0">
-        <a-image src="#elma-img" position="0 0.15 0" width="0.35" height="0.35"
-          material="alphaTest:0.1;transparent:true;"></a-image>
-        <a-text value="Elma Ozu" position="0 -0.07 0" align="center" color="#f87171" width="1.2"></a-text>
-        <a-text value="%50" position="0 -0.18 0" align="center" color="#ef4444" width="0.9"></a-text>
+
+      <!--
+        ELMA — SAĞ TARAF
+        position x=+0.45: kutunun sağına 0.45 birim
+        billboard: kameraya hep dönük
+      -->
+      <a-entity id="elma-group" position="0.45 0 0" billboard>
+        <!-- Arka plan kutusu -->
+        <a-plane
+          width="0.42" height="0.42"
+          position="0 0.1 -0.01"
+          material="color:#0d1117; transparent:true; opacity:0.75; shader:flat;">
+        </a-plane>
+
+        <!-- Elma görseli -->
+        <a-image
+          src="#elma-img"
+          position="0 0.18 0"
+          width="0.30" height="0.30"
+          material="alphaTest:0.5; transparent:true; depthWrite:false;">
+        </a-image>
+
+        <!-- Etiketler -->
+        <a-text value="Elma Ozu" position="0 -0.02 0" align="center" color="#f87171" width="1.1"></a-text>
+        <a-text value="%50"      position="0 -0.10 0" align="center" color="#ef4444" width="0.85"></a-text>
       </a-entity>
 
-      <!-- ÜST: BİLGİ PANELİ — y=+0.6 -->
-      <a-entity position="0 0.6 0.05">
-        <a-plane width="1.0" height="0.36" position="0 0 -0.002"
-          material="color:#0d1117;transparent:true;opacity:0.85;shader:flat;"></a-plane>
-        <a-text value="Icindekiler" position="0 0.12 0" align="center" color="#8b949e" width="1.5"></a-text>
-        <a-text value="%50 Armut" position="-0.23 0 0" align="center" color="#fbbf24" width="1.05"></a-text>
-        <a-plane width="0.003" height="0.2" material="color:#30363d;shader:flat;"></a-plane>
-        <a-text value="%50 Elma" position="0.23 0 0" align="center" color="#f87171" width="1.05"></a-text>
-        <a-plane width="0.45" height="0.025" position="-0.24 -0.12 0" material="color:#fbbf24;shader:flat;"></a-plane>
-        <a-plane width="0.45" height="0.025" position="0.24 -0.12 0" material="color:#f87171;shader:flat;"></a-plane>
+
+      <!--
+        BİLGİ PANELİ — ÜST
+        position y=+0.58: kutunun tepesine 0.58 birim yukarı
+        billboard: her açıdan okunabilir
+      -->
+      <a-entity id="panel" position="0 0.58 0" billboard>
+        <!-- Panel zemini -->
+        <a-plane
+          width="0.95" height="0.34"
+          position="0 0 -0.002"
+          material="color:#0d1117; transparent:true; opacity:0.88; shader:flat;">
+        </a-plane>
+        <!-- Panel kenarlığı -->
+        <a-plane
+          width="0.97" height="0.36"
+          position="0 0 -0.003"
+          material="color:#f97316; transparent:true; opacity:0.3; shader:flat;">
+        </a-plane>
+
+        <a-text value="Icindekiler" position="0 0.11 0" align="center" color="#8b949e" width="1.5"></a-text>
+
+        <!-- Sol: Armut -->
+        <a-text value="%50 Armut" position="-0.22 -0.01 0" align="center" color="#fbbf24" width="1.0"></a-text>
+        <!-- Dikey çizgi -->
+        <a-plane width="0.003" height="0.18" material="color:#30363d;shader:flat;"></a-plane>
+        <!-- Sağ: Elma -->
+        <a-text value="%50 Elma" position="0.22 -0.01 0" align="center" color="#f87171" width="1.0"></a-text>
+
+        <!-- İlerleme çubukları -->
+        <a-plane width="0.42" height="0.022" position="-0.23 -0.12 0" material="color:#fbbf24;shader:flat;"></a-plane>
+        <a-plane width="0.42" height="0.022" position=" 0.23 -0.12 0" material="color:#f87171;shader:flat;"></a-plane>
       </a-entity>
 
     </a-entity>
   </a-scene>
 
   <script>
-    // Hedef bulununca çerçeve gizle
+    // ── BILLBOARD COMPONENT ──────────────────────────────
+    // İçeriklerin her zaman kameraya dönük kalmasını sağlar.
+    // 3D uzayda konumlar sabit kalır, sadece rotasyon kameraya göre güncellenir.
+    AFRAME.registerComponent('billboard', {
+      tick: function () {
+        const camera = this.el.sceneEl.camera;
+        if (camera) {
+          // Kamera quaternion'ını kopyala — içerik kameraya baksın
+          this.el.object3D.quaternion.copy(camera.quaternion);
+        }
+      }
+    });
+
+    // ── HEDEF EVENTLARI ─────────────────────────────────
     document.querySelector('a-scene').addEventListener('loaded', function () {
-      const target = document.querySelector('[mindar-image-target]');
-      if (!target) return;
+      const target  = document.querySelector('[mindar-image-target]');
       const frameBox = document.getElementById('frame-box');
       const uiBottom = document.getElementById('ui-bottom');
+      if (!target) return;
+
       target.addEventListener('targetFound', () => {
         frameBox.style.opacity = '0';
         uiBottom.style.opacity = '0';
