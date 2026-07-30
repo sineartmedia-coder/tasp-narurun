@@ -72,67 +72,86 @@
 
     <!-- ── HEDEF #0 GÖRSELLERİ (MEYVE SUYU) ── -->
     <a-entity mindar-image-target="targetIndex: 0">
-      <!-- ARMUT — SOL TARAF -->
-      <a-entity id="armut-group" position="-0.35 0 0.05">
-        <a-plane width="0.38" height="0.38" position="0 0.1 -0.01" material="color:#0d1117; transparent:true; opacity:0.85; shader:flat;"></a-plane>
-        <a-image src="#armut-img" position="0 0.18 0" width="0.30" height="0.30" material="alphaTest:0.5; transparent:true; depthWrite:false;"></a-image>
-        <a-text value="Armut Ozu" position="0 -0.02 0" align="center" color="#fbbf24" width="1.1"></a-text>
-        <a-text value="%50" position="0 -0.10 0" align="center" color="#f59e0b" width="0.85"></a-text>
-      </a-entity>
+      <a-entity billboard>
+        <!-- ARMUT — SOL TARAF -->
+        <a-entity id="armut-group" position="-0.35 0 0.05">
+          <a-plane width="0.38" height="0.38" position="0 0.1 -0.01" material="color:#0d1117; transparent:true; opacity:0.85; shader:flat;"></a-plane>
+          <a-image src="#armut-img" position="0 0.18 0" width="0.30" height="0.30" material="alphaTest:0.5; transparent:true; depthWrite:false;"></a-image>
+          <a-text value="Armut Ozu" position="0 -0.02 0" align="center" color="#fbbf24" width="1.1"></a-text>
+          <a-text value="%50" position="0 -0.10 0" align="center" color="#f59e0b" width="0.85"></a-text>
+        </a-entity>
 
-      <!-- ELMA — SAĞ TARAF -->
-      <a-entity id="elma-group" position="0.35 0 0.05">
-        <a-plane width="0.38" height="0.38" position="0 0.1 -0.01" material="color:#0d1117; transparent:true; opacity:0.85; shader:flat;"></a-plane>
-        <a-image src="#elma-img" position="0 0.18 0" width="0.30" height="0.30" material="alphaTest:0.5; transparent:true; depthWrite:false;"></a-image>
-        <a-text value="Elma Ozu" position="0 -0.02 0" align="center" color="#f87171" width="1.1"></a-text>
-        <a-text value="%50" position="0 -0.10 0" align="center" color="#ef4444" width="0.85"></a-text>
-      </a-entity>
+        <!-- ELMA — SAĞ TARAF -->
+        <a-entity id="elma-group" position="0.35 0 0.05">
+          <a-plane width="0.38" height="0.38" position="0 0.1 -0.01" material="color:#0d1117; transparent:true; opacity:0.85; shader:flat;"></a-plane>
+          <a-image src="#elma-img" position="0 0.18 0" width="0.30" height="0.30" material="alphaTest:0.5; transparent:true; depthWrite:false;"></a-image>
+          <a-text value="Elma Ozu" position="0 -0.02 0" align="center" color="#f87171" width="1.1"></a-text>
+          <a-text value="%50" position="0 -0.10 0" align="center" color="#ef4444" width="0.85"></a-text>
+        </a-entity>
 
-      <!-- BİLGİ PANELİ — ÜST -->
-      <a-entity id="panel" position="0 0.55 0.05">
-        <a-plane width="0.9" height="0.32" position="0 0 -0.002" material="color:#0d1117; transparent:true; opacity:0.9; shader:flat;"></a-plane>
-        <a-plane width="0.97" height="0.36" position="0 0 -0.003" material="color:#f97316; transparent:true; opacity:0.3; shader:flat;"></a-plane>
-        <a-text value="Icindekiler" position="0 0.11 0" align="center" color="#8b949e" width="1.5"></a-text>
-        <a-text value="%50 Armut" position="-0.22 -0.01 0" align="center" color="#fbbf24" width="1.0"></a-text>
-        <a-plane width="0.003" height="0.18" material="color:#30363d;shader:flat;"></a-plane>
-        <a-text value="%50 Elma" position="0.22 -0.01 0" align="center" color="#f87171" width="1.0"></a-text>
-        <a-plane width="0.42" height="0.022" position="-0.23 -0.12 0" material="color:#fbbf24;shader:flat;"></a-plane>
-        <a-plane width="0.42" height="0.022" position=" 0.23 -0.12 0" material="color:#f87171;shader:flat;"></a-plane>
+        <!-- BİLGİ PANELİ — ÜST -->
+        <a-entity id="panel" position="0 0.55 0.05">
+          <a-plane width="0.9" height="0.32" position="0 0 -0.002" material="color:#0d1117; transparent:true; opacity:0.9; shader:flat;"></a-plane>
+          <a-plane width="0.97" height="0.36" position="0 0 -0.003" material="color:#f97316; transparent:true; opacity:0.3; shader:flat;"></a-plane>
+          <a-text value="Icindekiler" position="0 0.11 0" align="center" color="#8b949e" width="1.5"></a-text>
+          <a-text value="%50 Armut" position="-0.22 -0.01 0" align="center" color="#fbbf24" width="1.0"></a-text>
+          <a-plane width="0.003" height="0.18" material="color:#30363d;shader:flat;"></a-plane>
+          <a-text value="%50 Elma" position="0.22 -0.01 0" align="center" color="#f87171" width="1.0"></a-text>
+          <a-plane width="0.42" height="0.022" position="-0.23 -0.12 0" material="color:#fbbf24;shader:flat;"></a-plane>
+          <a-plane width="0.42" height="0.022" position=" 0.23 -0.12 0" material="color:#f87171;shader:flat;"></a-plane>
+        </a-entity>
       </a-entity>
     </a-entity>
 
     <!-- ── HEDEF #1 GÖRSELLERİ (KASK) ── -->
     <a-entity mindar-image-target="targetIndex: 1">
-      <a-entity position="0 0.5 0.05">
-        <a-plane width="1.1" height="0.4" position="0 0 -0.002" material="color:#0d1117; transparent:true; opacity:0.9; shader:flat;"></a-plane>
-        <a-plane width="1.13" height="0.43" position="0 0 -0.003" material="color:#3b82f6; transparent:true; opacity:0.4; shader:flat;"></a-plane>
-        <a-text value="PRO BIKER KASK" position="0 0.1 0" align="center" color="#60a5fa" width="1.8"></a-text>
-        <a-text value="Tam Koruma & Aerodinamik" position="0 0.01 0" align="center" color="#94a3b8" width="1.0"></a-text>
-        <a-text value="Fiyat: 2,999 TL" position="0 -0.1 0" align="center" color="#fbbf24" width="1.5"></a-text>
+      <a-entity billboard>
+        <a-entity position="0 0.5 0.05">
+          <a-plane width="1.1" height="0.4" position="0 0 -0.002" material="color:#0d1117; transparent:true; opacity:0.9; shader:flat;"></a-plane>
+          <a-plane width="1.13" height="0.43" position="0 0 -0.003" material="color:#3b82f6; transparent:true; opacity:0.4; shader:flat;"></a-plane>
+          <a-text value="PRO BIKER KASK" position="0 0.1 0" align="center" color="#60a5fa" width="1.8"></a-text>
+          <a-text value="Tam Koruma & Aerodinamik" position="0 0.01 0" align="center" color="#94a3b8" width="1.0"></a-text>
+          <a-text value="Fiyat: 2,999 TL" position="0 -0.1 0" align="center" color="#fbbf24" width="1.5"></a-text>
+        </a-entity>
       </a-entity>
     </a-entity>
 
     <!-- ── HEDEF #2 GÖRSELLERİ (BURCU) ── -->
     <a-entity mindar-image-target="targetIndex: 2">
-      <a-entity position="0 0.4 0.05">
-        <a-plane width="1.2" height="0.3" position="0 0 -0.002" material="color:#0d1117; transparent:true; opacity:0.85; shader:flat;"></a-plane>
-        <a-plane width="1.23" height="0.33" position="0 0 -0.003" material="color:#ec4899; transparent:true; opacity:0.5; shader:flat;"></a-plane>
-        <a-text value="Burcu Halkla Iliskiler 😎" position="0 0 0" align="center" color="#fbcfe8" width="1.5"></a-text>
+      <a-entity billboard>
+        <a-entity position="0 0.4 0.05">
+          <a-plane width="1.2" height="0.3" position="0 0 -0.002" material="color:#0d1117; transparent:true; opacity:0.85; shader:flat;"></a-plane>
+          <a-plane width="1.23" height="0.33" position="0 0 -0.003" material="color:#ec4899; transparent:true; opacity:0.5; shader:flat;"></a-plane>
+          <a-text value="Burcu Halkla Iliskiler 😎" position="0 0 0" align="center" color="#fbcfe8" width="1.5"></a-text>
+        </a-entity>
       </a-entity>
     </a-entity>
 
     <!-- ── HEDEF #3 GÖRSELLERİ (MEHPARE MÜDÜR) ── -->
     <a-entity mindar-image-target="targetIndex: 3">
-      <a-entity position="0 0.4 0.05">
-        <a-plane width="1.2" height="0.3" position="0 0 -0.002" material="color:#0d1117; transparent:true; opacity:0.85; shader:flat;"></a-plane>
-        <a-plane width="1.23" height="0.33" position="0 0 -0.003" material="color:#f59e0b; transparent:true; opacity:0.5; shader:flat;"></a-plane>
-        <a-text value="Mehpare Mudur 😀" position="0 0 0" align="center" color="#fde68a" width="1.5"></a-text>
+      <a-entity billboard>
+        <a-entity position="0 0.4 0.05">
+          <a-plane width="1.2" height="0.3" position="0 0 -0.002" material="color:#0d1117; transparent:true; opacity:0.85; shader:flat;"></a-plane>
+          <a-plane width="1.23" height="0.33" position="0 0 -0.003" material="color:#f59e0b; transparent:true; opacity:0.5; shader:flat;"></a-plane>
+          <a-text value="Mehpare Mudur 😀" position="0 0 0" align="center" color="#fde68a" width="1.5"></a-text>
+        </a-entity>
       </a-entity>
     </a-entity>
 
   </a-scene>
 
   <script>
+    // ── SABİTLEME SİSTEMİ (BILLBOARD) ──
+    // AR kamerasının titremesini yoksayarak görsellerin sadece ekrana dönük kalmasını sağlar.
+    // Taranan objenin merkezinden asla ayrılmaz, sağa sola kaymaz.
+    AFRAME.registerComponent('billboard', {
+      tick: function () {
+        // Taranan hedefin o anki açısını (rotasyonunu) tamamen tersine çeviriyoruz.
+        // Böylece hedefin rotasyon titremesi (sallantısı) sıfırlanıyor ve içerik dümdüz kameraya bakıyor.
+        this.el.object3D.quaternion.copy(this.el.parentEl.object3D.quaternion).invert();
+      }
+    });
+
     // ── HEDEF EVENTLARI ─────────────────────────────────
     document.querySelector('a-scene').addEventListener('loaded', function () {
       const targets = document.querySelectorAll('[mindar-image-target]');
