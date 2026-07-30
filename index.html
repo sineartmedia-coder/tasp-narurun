@@ -73,6 +73,8 @@
     <!-- TAKİP NOKTALARI (GÖRÜNMEZ ÇAPALAR) -->
     <a-entity id="tracker-0" mindar-image-target="targetIndex: 0"></a-entity>
     <a-entity id="tracker-1" mindar-image-target="targetIndex: 1"></a-entity>
+    <a-entity id="tracker-2" mindar-image-target="targetIndex: 2"></a-entity>
+    <a-entity id="tracker-3" mindar-image-target="targetIndex: 3"></a-entity>
 
     <!-- ── HEDEF #0 GÖRSELLERİ (MEYVE SUYU) ── -->
     <a-entity id="visual-0" smooth-tracker="target: #tracker-0; speed: 0.25">
@@ -113,6 +115,24 @@
         <a-text value="PRO BIKER KASK" position="0 0.1 0" align="center" color="#60a5fa" width="1.8"></a-text>
         <a-text value="Tam Koruma & Aerodinamik" position="0 0.01 0" align="center" color="#94a3b8" width="1.0"></a-text>
         <a-text value="Fiyat: 2,999 TL" position="0 -0.1 0" align="center" color="#fbbf24" width="1.5"></a-text>
+      </a-entity>
+    </a-entity>
+
+    <!-- ── HEDEF #2 GÖRSELLERİ (BURCU) ── -->
+    <a-entity id="visual-2" smooth-tracker="target: #tracker-2; speed: 0.25">
+      <a-entity position="0 0.4 0.05">
+        <a-plane width="1.2" height="0.3" position="0 0 -0.002" material="color:#0d1117; transparent:true; opacity:0.85; shader:flat;"></a-plane>
+        <a-plane width="1.23" height="0.33" position="0 0 -0.003" material="color:#ec4899; transparent:true; opacity:0.5; shader:flat;"></a-plane>
+        <a-text value="Burcu Halkla Iliskiler 😎" position="0 0 0" align="center" color="#fbcfe8" width="1.5"></a-text>
+      </a-entity>
+    </a-entity>
+
+    <!-- ── HEDEF #3 GÖRSELLERİ (MEHPATE MÜDÜR) ── -->
+    <a-entity id="visual-3" smooth-tracker="target: #tracker-3; speed: 0.25">
+      <a-entity position="0 0.4 0.05">
+        <a-plane width="1.2" height="0.3" position="0 0 -0.002" material="color:#0d1117; transparent:true; opacity:0.85; shader:flat;"></a-plane>
+        <a-plane width="1.23" height="0.33" position="0 0 -0.003" material="color:#f59e0b; transparent:true; opacity:0.5; shader:flat;"></a-plane>
+        <a-text value="Mehpate Mudur 😀" position="0 0 0" align="center" color="#fde68a" width="1.5"></a-text>
       </a-entity>
     </a-entity>
 
