@@ -6,151 +6,151 @@
   <meta name="theme-color" content="#0d1117" />
   <title>Meyve Suyu AR</title>
 
-  <!-- DOĞRU SIRA: Önce A-Frame, sonra MindAR eklentisi -->
+  <!-- 1) A-Frame önce -->
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+  <!-- 2) MindAR A-Frame eklentisi sonra -->
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { width: 100%; height: 100%; overflow: hidden; background: #0d1117; }
 
-    /* Karşılama ekranı */
-    #welcome {
+    /* Splash ekranı */
+    #splash {
       position: fixed; inset: 0; z-index: 9999;
       display: flex; flex-direction: column;
-      align-items: center; justify-content: center; gap: 18px;
+      align-items: center; justify-content: center; gap: 20px;
       background: linear-gradient(135deg, #0d1117, #161b22);
       color: #e6edf3;
       font-family: 'Segoe UI', system-ui, sans-serif;
       transition: opacity 0.5s;
     }
-    #welcome.hide { opacity: 0; pointer-events: none; }
+    #splash.out { opacity: 0; pointer-events: none; }
 
     .logo {
       width: 80px; height: 80px; border-radius: 20px;
       background: linear-gradient(135deg, #f97316, #eab308);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 40px;
-      animation: pulse 2s ease-in-out infinite;
+      display: flex; align-items: center; justify-content: center; font-size: 40px;
+      animation: p 2s ease-in-out infinite;
     }
-    @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
+    @keyframes p { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
 
     .title {
       font-size: 24px; font-weight: 700;
-      background: linear-gradient(90deg, #f97316, #eab308);
+      background: linear-gradient(90deg,#f97316,#eab308);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
+    .desc { font-size: 13px; color: #8b949e; text-align: center; max-width: 260px; line-height: 1.7; }
 
     .steps {
       background: #161b22; border: 1px solid #30363d;
       border-radius: 14px; padding: 16px 18px; width: 280px;
       display: flex; flex-direction: column; gap: 12px;
     }
-    .step { display: flex; align-items: center; gap: 10px; font-size: 13px; color: #c9d1d9; }
+    .step { display:flex; align-items:center; gap:10px; font-size:13px; color:#c9d1d9; }
     .step .n {
-      width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
-      background: linear-gradient(135deg, #f97316, #eab308);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 11px; font-weight: 700; color: #000;
+      width:22px; height:22px; border-radius:50%; flex-shrink:0;
+      background:linear-gradient(135deg,#f97316,#eab308);
+      display:flex; align-items:center; justify-content:center;
+      font-size:11px; font-weight:700; color:#000;
     }
 
     #btn {
       padding: 16px 0; width: 280px;
       font-size: 17px; font-weight: 700; color: #000;
-      background: linear-gradient(135deg, #f97316, #eab308);
+      background: linear-gradient(135deg,#f97316,#eab308);
       border: none; border-radius: 99px; cursor: pointer;
       box-shadow: 0 0 30px rgba(249,115,22,0.5);
+      transition: transform 0.1s;
     }
-    #btn:disabled { opacity: 0.6; }
+    #btn:active { transform: scale(0.97); }
 
     .note { font-size: 11px; color: #484f58; text-align: center; max-width: 260px; }
 
-    /* HUD & ipucu */
+    /* HUD */
     #hud {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 500;
-      padding: 14px 20px; display: flex; align-items: center; justify-content: space-between;
-      background: linear-gradient(180deg, rgba(0,0,0,0.7), transparent);
-      font-family: 'Segoe UI', system-ui, sans-serif;
+      position:fixed; top:0; left:0; right:0; z-index:500;
+      padding:14px 20px; display:flex; align-items:center; justify-content:space-between;
+      background:linear-gradient(180deg,rgba(0,0,0,0.7),transparent);
+      font-family:'Segoe UI',system-ui,sans-serif; pointer-events:none;
     }
-    .brand { color:#fff; font-weight:700; font-size:15px; display:flex; align-items:center; gap:8px; }
-    .dot { width:8px;height:8px;border-radius:50%;background:#22c55e;animation:blink 1.4s infinite; }
+    .brand{color:#fff;font-weight:700;font-size:15px;display:flex;align-items:center;gap:8px;}
+    .dot{width:8px;height:8px;border-radius:50%;background:#22c55e;animation:blink 1.4s infinite;}
     @keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
     .badge{font-size:11px;color:#f97316;border:1px solid rgba(249,115,22,0.4);border-radius:99px;padding:3px 10px;}
 
+    /* İpucu */
     #hint {
       position:fixed; bottom:0; left:0; right:0; z-index:500;
       padding:16px 20px 28px; display:flex; justify-content:center;
       background:linear-gradient(0deg,rgba(0,0,0,0.7),transparent);
-      font-family:'Segoe UI',system-ui,sans-serif;
-      transition:opacity 0.4s;
+      font-family:'Segoe UI',system-ui,sans-serif; transition:opacity 0.4s;
     }
     #hint p{font-size:13px;color:rgba(255,255,255,0.85);text-align:center;}
 
     /* Tarama çerçevesi */
     #frame {
       position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
-      width:200px; height:280px; pointer-events:none; z-index:400;
-      transition:opacity 0.4s;
+      width:200px; height:280px; pointer-events:none; z-index:400; transition:opacity 0.4s;
     }
-    #frame::before,#frame::after,.fc{content:'';position:absolute;width:28px;height:28px;border-color:rgba(249,115,22,0.9);border-style:solid;}
+    #frame::before,#frame::after,.fc{
+      content:''; position:absolute; width:28px; height:28px;
+      border-color:rgba(249,115,22,0.9); border-style:solid;
+    }
     #frame::before{top:0;left:0;border-width:3px 0 0 3px;border-radius:4px 0 0 0;}
     #frame::after{bottom:0;right:0;border-width:0 3px 3px 0;border-radius:0 0 4px 0;}
     .fc{position:absolute;}
     .fc.tr{top:0;right:0;border-width:3px 3px 0 0;border-radius:0 4px 0 0;}
     .fc.bl{bottom:0;left:0;border-width:0 0 3px 3px;border-radius:0 0 0 4px;}
-    .sl{position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(249,115,22,0.9),transparent);animation:scan 2s linear infinite;}
+    .sl{
+      position:absolute; left:0; right:0; height:2px;
+      background:linear-gradient(90deg,transparent,rgba(249,115,22,0.9),transparent);
+      animation:scan 2s linear infinite;
+    }
     @keyframes scan{0%{top:0}100%{top:100%}}
 
-    /* A-Frame sahnesi */
-    a-scene { position: fixed !important; inset: 0 !important; }
+    a-scene { position:fixed !important; inset:0 !important; }
   </style>
 </head>
 <body>
 
-  <!-- ── KARŞILAMA EKRANI ── -->
-  <div id="welcome">
+  <!-- SPLASH -->
+  <div id="splash">
     <div class="logo">🍹</div>
     <div class="title">Meyve Suyu AR</div>
+    <div class="desc">Meyve suyu kutusunu kameraya tut, içindekiler canlanıyor!</div>
     <div class="steps">
       <div class="step"><div class="n">1</div><span>Butona bas, kamera iznini ver</span></div>
-      <div class="step"><div class="n">2</div><span>Meyve suyu kutusunu tut</span></div>
+      <div class="step"><div class="n">2</div><span>Meyve suyu kutusunu kameraya tut</span></div>
       <div class="step"><div class="n">3</div><span>Armut ve elma bilgileri belirir 🎉</span></div>
     </div>
-    <button id="btn" onclick="startAR()">📷 AR'ı Başlat</button>
-    <div class="note">Kamera izni isteniyor — lütfen "İzin Ver" seç</div>
+    <button id="btn" onclick="hideSplash()">📷 AR'ı Başlat</button>
+    <div class="note">Kamera izni istenecek — "İzin Ver"e bas</div>
   </div>
 
-  <!-- ── HUD ── -->
-  <div id="hud" style="display:none">
+  <!-- HUD -->
+  <div id="hud">
     <div class="brand"><span class="dot"></span>Meyve AR</div>
     <span class="badge">LIVE AR</span>
   </div>
 
-  <!-- ── TARAMA ÇERÇEVESİ ── -->
-  <div id="frame" style="display:none">
-    <div class="fc tr"></div><div class="fc bl"></div><div class="sl"></div>
-  </div>
+  <!-- Tarama çerçevesi -->
+  <div id="frame"><div class="fc tr"></div><div class="fc bl"></div><div class="sl"></div></div>
 
-  <!-- ── İPUCU ── -->
-  <div id="hint" style="display:none">
-    <p>📦 Meyve suyu kutusunu kameraya göster</p>
-  </div>
+  <!-- İpucu -->
+  <div id="hint"><p>📦 Meyve suyu kutusunu kameraya göster</p></div>
 
-  <!-- ══════════════════════════════════════
+  <!-- ════════════════════════════════════
        A-FRAME + MindAR SAHNESİ
-       
-       embedded: Tam ekran yerine container içinde çalışır
-       autoStart: true → kullanıcı butona basınca
-                         (aşağıda JS ile kontrol ediliyor)
-  ══════════════════════════════════════ -->
+       autoStart: true → kamera arka planda başlıyor
+       Splash kapanınca kamera zaten hazır
+  ════════════════════════════════════ -->
   <a-scene
-    id="ar-scene"
-    mindar-image="imageTargetSrc: ./targets.mind; autoStart: false; uiLoading: no; uiScanning: no; uiError: no;"
+    mindar-image="imageTargetSrc: ./targets.mind; autoStart: true; uiLoading: no; uiScanning: no; uiError: no;"
     color-space="sRGB"
     renderer="colorManagement: true; antialias: true;"
     vr-mode-ui="enabled: false"
     device-orientation-permission-ui="enabled: false"
-    embedded
   >
     <a-assets timeout="15000">
       <img id="armut-img" src="./armut.png" crossorigin="anonymous" />
@@ -159,10 +159,9 @@
 
     <a-camera position="0 0 0" look-controls="enabled:false" wasd-controls="enabled:false"></a-camera>
 
-    <!-- ── HEDEF #0 ── -->
     <a-entity mindar-image-target="targetIndex: 0">
 
-      <!-- SOL: ARMUT — x=-0.55 (kutunun solunda) -->
+      <!-- SOL: ARMUT — x=-0.55 (kutunun sol tarafı) -->
       <a-entity position="-0.55 0 0.05"
         animation__float="property:position;from:-0.55 0.04 0.05;to:-0.55 -0.04 0.05;dur:2200;dir:alternate;loop:true;easing:easeInOutSine;">
         <a-circle radius="0.22" position="0 0.18 -0.01"
@@ -175,7 +174,7 @@
         <a-text value="%50" position="0 -0.18 0" align="center" color="#f59e0b" width="0.95"></a-text>
       </a-entity>
 
-      <!-- SAĞ: ELMA — x=+0.55 (kutunun sağında) -->
+      <!-- SAĞ: ELMA — x=+0.55 (kutunun sağ tarafı) -->
       <a-entity position="0.55 0 0.05"
         animation__float="property:position;from:0.55 -0.04 0.05;to:0.55 0.04 0.05;dur:2200;dir:alternate;loop:true;easing:easeInOutSine;">
         <a-circle radius="0.22" position="0 0.18 -0.01"
@@ -188,7 +187,7 @@
         <a-text value="%50" position="0 -0.18 0" align="center" color="#ef4444" width="0.95"></a-text>
       </a-entity>
 
-      <!-- ÜST: BİLGİ PANELİ — y=+0.6 (kutunun üstünde) -->
+      <!-- ÜST: BİLGİ PANELİ — y=+0.6 (kutunun üstü) -->
       <a-entity position="0 0.6 0.05"
         animation__entry="property:scale;from:0.01 0.01 0.01;to:1 1 1;dur:500;easing:easeOutBack;">
         <a-plane width="1.0" height="0.38" position="0 0 -0.003"
@@ -209,58 +208,26 @@
   </a-scene>
 
   <script>
-    const welcome = document.getElementById('welcome');
-    const hud     = document.getElementById('hud');
-    const frame   = document.getElementById('frame');
-    const hint    = document.getElementById('hint');
-    const scene   = document.getElementById('ar-scene');
-
-    function startAR() {
-      const btn = document.getElementById('btn');
-      btn.textContent = '⏳ Yükleniyor...';
-      btn.disabled = true;
-
-      function go() {
-        // MindAR'ı başlat — kamera izni buradan isteniyor
-        const sys = scene.systems['mindar-image'];
-        if (sys) {
-          sys.start().then(() => {
-            // Kamera açıldı, UI'ı göster
-            welcome.classList.add('hide');
-            setTimeout(() => welcome.style.display = 'none', 500);
-            hud.style.display   = 'flex';
-            frame.style.display = 'block';
-            hint.style.display  = 'flex';
-
-            // Hedef eventleri
-            const target = scene.querySelector('[mindar-image-target]');
-            if (target) {
-              target.addEventListener('targetFound', () => {
-                frame.style.opacity = '0';
-                hint.style.opacity  = '0';
-              });
-              target.addEventListener('targetLost', () => {
-                frame.style.opacity = '1';
-                hint.style.opacity  = '1';
-              });
-            }
-          }).catch(err => {
-            btn.textContent = '❌ Kamera açılamadı - Tekrar Dene';
-            btn.disabled = false;
-            console.error('MindAR start error:', err);
-          });
-        } else {
-          btn.textContent = '❌ Hata oluştu - Sayfayı yenile';
-        }
-      }
-
-      // Sahne yüklendiyse direkt başlat, yoksa bekle
-      if (scene.hasLoaded) {
-        go();
-      } else {
-        scene.addEventListener('loaded', go, { once: true });
-      }
+    function hideSplash() {
+      // Splash'ı kapat — kamera zaten arka planda başlamış olacak
+      const splash = document.getElementById('splash');
+      splash.classList.add('out');
+      setTimeout(() => splash.style.display = 'none', 500);
     }
+
+    // Hedef bulununca çerçeve ve ipucunu gizle
+    document.querySelector('a-scene').addEventListener('loaded', function () {
+      const target = document.querySelector('[mindar-image-target]');
+      if (!target) return;
+      target.addEventListener('targetFound', () => {
+        document.getElementById('frame').style.opacity = '0';
+        document.getElementById('hint').style.opacity  = '0';
+      });
+      target.addEventListener('targetLost', () => {
+        document.getElementById('frame').style.opacity = '1';
+        document.getElementById('hint').style.opacity  = '1';
+      });
+    });
   </script>
 
 </body>
