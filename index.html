@@ -9,16 +9,14 @@
   <title>Meyve Suyu AR | Artırılmış Gerçeklik Deneyimi</title>
   <meta name="description" content="Meyve suyu kutusunu kameraya tut, içindekiler anında canlanıyor! A-Frame ve MindAR ile WebAR deneyimi." />
 
-  <!-- ─────────────────────────────────────────
-       KÜTÜPHANELER
-       A-Frame  : 3D sahne motoru
-       MindAR   : Görsel tanıma / Image Tracking
-  ───────────────────────────────────────── -->
+  <!--
+    ⚠️ ÖNEMLİ: mindar-image-aframe.prod.js zaten A-Frame'i içinde barındırıyor.
+    Ayrıca aframe.min.js yüklemek çakışmaya (conflict) ve siyah kamera ekranına yol açar.
+    Bu yüzden SADECE MindAR bundle'ı yüklüyoruz.
+  -->
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
-  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
 
   <style>
-    /* ── TEMEL RESET ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     html, body {
@@ -64,7 +62,7 @@
 
     @keyframes pulse {
       0%, 100% { transform: scale(1); box-shadow: 0 0 40px rgba(249,115,22,0.4); }
-      50% { transform: scale(1.08); box-shadow: 0 0 60px rgba(249,115,22,0.7); }
+      50%       { transform: scale(1.08); box-shadow: 0 0 60px rgba(249,115,22,0.7); }
     }
 
     .loading-title {
@@ -97,24 +95,21 @@
       width: 0%;
       background: linear-gradient(90deg, #f97316, #eab308);
       border-radius: 99px;
-      transition: width 0.3s ease;
       animation: loadProgress 3s ease-in-out forwards;
     }
 
     @keyframes loadProgress {
-      0%   { width: 0%; }
-      30%  { width: 40%; }
-      60%  { width: 70%; }
-      90%  { width: 90%; }
-      100% { width: 100%; }
+      0%  { width: 0%; }
+      30% { width: 40%; }
+      60% { width: 70%; }
+      90% { width: 90%; }
+      100%{ width: 100%; }
     }
 
-    /* ── ÜST BİLGİ ÇUBUĞU ── */
+    /* ── ÜST HUD ── */
     #hud-bar {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
+      top: 0; left: 0; right: 0;
       z-index: 100;
       padding: 12px 20px;
       display: flex;
@@ -134,9 +129,8 @@
       gap: 8px;
     }
 
-    #hud-bar .brand span.dot {
-      width: 8px;
-      height: 8px;
+    #hud-bar .brand .dot {
+      width: 8px; height: 8px;
       border-radius: 50%;
       background: #22c55e;
       box-shadow: 0 0 8px #22c55e;
@@ -145,7 +139,7 @@
 
     @keyframes blink {
       0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
+      50%       { opacity: 0.3; }
     }
 
     #hud-bar .ar-badge {
@@ -156,161 +150,101 @@
       border: 1px solid rgba(249,115,22,0.3);
       border-radius: 99px;
       padding: 4px 10px;
-      letter-spacing: 0.5px;
     }
 
-    /* ── ALT YARDIM YAZISI ── */
+    /* ── ALT İPUCU ── */
     #hint-bar {
       position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      bottom: 0; left: 0; right: 0;
       z-index: 100;
       padding: 20px 20px 32px;
       display: flex;
       align-items: center;
       justify-content: center;
       background: linear-gradient(0deg, rgba(13,17,23,0.85) 0%, transparent 100%);
+      transition: opacity 0.4s ease;
     }
 
     #hint-bar p {
       font-size: 13px;
-      color: rgba(230,237,243,0.75);
+      color: rgba(230,237,243,0.85);
       text-align: center;
-      display: flex;
-      align-items: center;
-      gap: 8px;
     }
 
-    #hint-bar p::before {
-      content: "📦";
-      font-size: 18px;
-    }
-
-    /* ── KAMERA HEDEF ÇERÇEVESİ ── */
+    /* ── TARAMA ÇERÇEVESİ ── */
     #scan-frame {
       position: fixed;
-      top: 50%;
-      left: 50%;
+      top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-      width: 220px;
-      height: 300px;
+      width: 220px; height: 300px;
       z-index: 50;
       pointer-events: none;
+      transition: opacity 0.4s ease;
     }
 
-    #scan-frame::before,
-    #scan-frame::after {
+    #scan-frame::before, #scan-frame::after {
       content: '';
       position: absolute;
-      width: 30px;
-      height: 30px;
+      width: 30px; height: 30px;
       border-color: rgba(249,115,22,0.8);
       border-style: solid;
     }
+    #scan-frame::before { top:0; left:0; border-width:3px 0 0 3px; border-radius:4px 0 0 0; }
+    #scan-frame::after  { bottom:0; right:0; border-width:0 3px 3px 0; border-radius:0 0 4px 0; }
 
-    #scan-frame::before {
-      top: 0; left: 0;
-      border-width: 3px 0 0 3px;
-      border-radius: 4px 0 0 0;
-    }
-
-    #scan-frame::after {
-      bottom: 0; right: 0;
-      border-width: 0 3px 3px 0;
-      border-radius: 0 0 4px 0;
-    }
-
-    .scan-corner {
-      position: absolute;
-      width: 30px;
-      height: 30px;
-      border-color: rgba(249,115,22,0.8);
-      border-style: solid;
-    }
-
-    .scan-corner.tr {
-      top: 0; right: 0;
-      border-width: 3px 3px 0 0;
-      border-radius: 0 4px 0 0;
-    }
-
-    .scan-corner.bl {
-      bottom: 0; left: 0;
-      border-width: 0 0 3px 3px;
-      border-radius: 0 0 0 4px;
-    }
+    .scan-corner { position:absolute; width:30px; height:30px; border-color:rgba(249,115,22,0.8); border-style:solid; }
+    .scan-corner.tr { top:0; right:0; border-width:3px 3px 0 0; border-radius:0 4px 0 0; }
+    .scan-corner.bl { bottom:0; left:0; border-width:0 0 3px 3px; border-radius:0 0 0 4px; }
 
     .scan-line {
       position: absolute;
-      left: 0; right: 0;
-      height: 2px;
+      left:0; right:0; height:2px;
       background: linear-gradient(90deg, transparent, rgba(249,115,22,0.8), transparent);
       animation: scanMove 2s linear infinite;
     }
+    @keyframes scanMove { 0%{top:0%} 100%{top:100%} }
 
-    @keyframes scanMove {
-      0%   { top: 0%; }
-      100% { top: 100%; }
-    }
-
-    /* ── A-FRAME CANVAS ── */
-    a-scene {
-      position: fixed !important;
-      inset: 0 !important;
-    }
+    a-scene { position: fixed !important; inset: 0 !important; }
   </style>
 </head>
 <body>
 
-  <!-- ══════════════════════════════════════════
-       YÜKLEME EKRANI
-  ══════════════════════════════════════════ -->
+  <!-- YÜKLEME EKRANI -->
   <div id="loading-screen" aria-live="polite">
     <div class="loading-logo">🍹</div>
     <h1 class="loading-title">Meyve Suyu AR</h1>
-    <p class="loading-subtitle">Kamera ve AR motoru hazırlanıyor...<br>Lütfen kamera iznini kabul edin.</p>
-    <div class="loading-bar-wrap">
-      <div class="loading-bar"></div>
-    </div>
+    <p class="loading-subtitle">Kamera ve AR motoru hazırlanıyor…<br>Lütfen kamera iznini kabul edin.</p>
+    <div class="loading-bar-wrap"><div class="loading-bar"></div></div>
   </div>
 
-  <!-- ══════════════════════════════════════════
-       ÜST HUD ÇUBUĞU
-  ══════════════════════════════════════════ -->
+  <!-- ÜST HUD -->
   <div id="hud-bar">
-    <div class="brand">
-      <span class="dot"></span>
-      Meyve AR
-    </div>
+    <div class="brand"><span class="dot"></span> Meyve AR</div>
     <span class="ar-badge">LIVE AR</span>
   </div>
 
-  <!-- ══════════════════════════════════════════
-       TARAMA ÇERÇEVESİ
-  ══════════════════════════════════════════ -->
+  <!-- TARAMA ÇERÇEVESİ -->
   <div id="scan-frame" aria-hidden="true">
     <div class="scan-corner tr"></div>
     <div class="scan-corner bl"></div>
     <div class="scan-line"></div>
   </div>
 
-  <!-- ══════════════════════════════════════════
-       ALT YONLENDİRME YAZISI
-  ══════════════════════════════════════════ -->
+  <!-- ALT İPUCU -->
   <div id="hint-bar">
-    <p>Meyve suyu kutusunu kameraya göster</p>
+    <p>📦 Meyve suyu kutusunu kameraya göster</p>
   </div>
 
-  <!-- ══════════════════════════════════════════
+  <!-- ════════════════════════════════════════
        A-FRAME AR SAHNESİ
        
-       mindar-image sistemi:
-       - imageTargetSrc: .mind dosyasının yolu
-       - autoStart: sayfa açılınca otomatik başlar
-       - uiLoading / uiError: MindAR'ın kendi UI'larını kapat
-         (bizim özel UI'mız var)
-  ══════════════════════════════════════════ -->
+       Koordinat sistemi (MindAR):
+         X ekseni → sağ(+) / sol(-)
+         Y ekseni → yukarı(+) / aşağı(-)
+         Z ekseni → kameraya yakın(+) / uzak(-)
+       
+       1 birim ≈ hedef görselin kısa kenarı
+  ════════════════════════════════════════ -->
   <a-scene
     mindar-image="
       imageTargetSrc: ./targets.mind;
@@ -320,417 +254,286 @@
       uiError: no;
     "
     color-space="sRGB"
-    renderer="colorManagement: true; physicallyCorrectLights: true; antialias: true;"
+    renderer="colorManagement: true; antialias: true;"
     vr-mode-ui="enabled: false"
     device-orientation-permission-ui="enabled: false"
   >
 
-    <!-- ── VARLIK HAVUZU (Assets) ──────────────
-         Tüm görseller burada önbelleğe alınır.
-         crossorigin="anonymous": CORS hatalarını önler.
-    ───────────────────────────────────────── -->
-    <a-assets timeout="10000">
-      <!-- Armut görseli (sol taraf) -->
-      <img id="armut-img"  src="./armut.png"  crossorigin="anonymous" />
-      <!-- Elma görseli (sağ taraf) -->
-      <img id="elma-img"   src="./elma.png"   crossorigin="anonymous" />
+    <!-- VARLIK HAVUZU -->
+    <a-assets timeout="15000">
+      <img id="armut-img" src="./armut.png" crossorigin="anonymous" />
+      <img id="elma-img"  src="./elma.png"  crossorigin="anonymous" />
     </a-assets>
 
-    <!-- ── KAMERA ─────────────────────────────
-         mindar-image sistemi kamerayı kendisi
-         yönetir, a-camera eklemek zorunlu değil
-         ama pozisyon referansı için bırakıyoruz.
-    ───────────────────────────────────────── -->
+    <!-- KAMERA — MindAR ile zorunlu, ek kontrol kapalı -->
     <a-camera
       position="0 0 0"
       look-controls="enabled: false"
       wasd-controls="enabled: false"
     ></a-camera>
 
-    <!-- ════════════════════════════════════════
-         HEDEF #0 - Meyve Suyu Kutusu
-         
-         MindAR, targets.mind dosyasındaki
-         0. indeksli görseli (kutunun ön yüzü)
-         tanıdığında bu entity görünür hale gelir.
-         
-         Koordinat Sistemi:
-           - X ekseni: sağ (+) / sol (-)
-           - Y ekseni: yukarı (+) / aşağı (-)
-           - Z ekseni: kameraya doğru (+) / uzakta (-)
-         
-         MindAR'da hedef görsel 1 birim = kutunun
-         kısa kenarı (yaklaşık) olarak ölçeklenir.
-    ════════════════════════════════════════ -->
+    <!-- ══════════════════════════════════════
+         HEDEF #0 — Meyve Suyu Kutusu
+         Targets.mind'daki ilk (0. indeks) görsel
+    ══════════════════════════════════════ -->
     <a-entity mindar-image-target="targetIndex: 0">
 
-      <!-- ────────────────────────────────────
-           SOL TARAF: ARMUT GRubu
-           
+      <!-- ─────────────────────────────────
+           SOL TARAF: ARMUT GRUBU
            position="-0.55 0 0.05"
-             x: -0.55  → kutunun soluna 0.55 birim
-             y:  0      → kutuyla aynı dikey hizaya
-             z:  0.05   → hafif öne çıkarak kamera önü
-           
-           Gruptaki öğeler birbirine göre
-           konumlandırılır (yerel koordinat).
-      ──────────────────────────────────── -->
+             -0.55 → kutunun soluna 0.55 birim
+              0    → kutuyla aynı dikey hizası
+              0.05 → kameraya doğru hafif öne
+      ───────────────────────────────── -->
       <a-entity
         id="armut-group"
         position="-0.55 0 0.05"
         animation__float="
           property: position;
-          from: -0.55 0.03 0.05;
-          to: -0.55 -0.03 0.05;
-          dur: 2000;
-          dir: alternate;
-          loop: true;
-          easing: easeInOutSine;
+          from: -0.55 0.04 0.05;
+          to:   -0.55 -0.04 0.05;
+          dur: 2000; dir: alternate; loop: true; easing: easeInOutSine;
         "
       >
-        <!-- Armut Görseli (2D düzlem)
-             width/height: birimi hedef görsel boyutuna göre
-             position: grup içinde y=0.18 → görseli biraz yukarda
-        -->
+        <!-- Armut görseli: width/height birim cinsinden boyut -->
         <a-image
-          id="armut-icon"
           src="#armut-img"
           position="0 0.18 0"
-          width="0.35"
-          height="0.35"
+          width="0.35" height="0.35"
           material="alphaTest: 0.1; transparent: true;"
           animation__spin="
             property: rotation;
-            from: 0 -20 0;
-            to: 0 20 0;
-            dur: 3000;
-            dir: alternate;
-            loop: true;
-            easing: easeInOutSine;
+            from: 0 -15 0; to: 0 15 0;
+            dur: 3000; dir: alternate; loop: true; easing: easeInOutSine;
           "
         ></a-image>
 
-        <!-- "Armut Özü" Yazısı
-             position: y=-0.08 → görselin hemen altında
-        -->
+        <!-- "Armut Özü" etiketi -->
         <a-text
-          id="armut-label"
-          value="🍐 Armut Özü"
-          position="0 -0.08 0"
+          value="Armut Ozu"
+          position="0 -0.07 0"
           align="center"
           color="#fbbf24"
           width="1.2"
-          font="https://cdn.aframe.io/fonts/Roboto-msdf.json"
-          font-image="https://cdn.aframe.io/fonts/Roboto-msdf.png"
-          shader="msdf"
-          letter-spacing="1"
         ></a-text>
 
-        <!-- Yüzde Yazısı (küçük alt yazı) -->
+        <!-- "%50" alt yazı -->
         <a-text
-          id="armut-pct"
           value="%50"
-          position="0 -0.18 0"
+          position="0 -0.17 0"
           align="center"
-          color="rgba(251,191,36,0.7)"
+          color="#f59e0b"
           width="0.9"
-          font="https://cdn.aframe.io/fonts/Roboto-msdf.json"
-          font-image="https://cdn.aframe.io/fonts/Roboto-msdf.png"
-          shader="msdf"
         ></a-text>
 
-        <!-- Parlak glow halkası (görsel derinlik) -->
+        <!-- Glow çemberi (a-circle, a-rounded gerektirmez) -->
         <a-circle
-          radius="0.2"
+          radius="0.21"
           position="0 0.18 -0.01"
           material="color: #fbbf24; transparent: true; opacity: 0.12; shader: flat;"
           animation__pulse="
             property: material.opacity;
-            from: 0.05;
-            to: 0.25;
-            dur: 1500;
-            dir: alternate;
-            loop: true;
-            easing: easeInOutSine;
+            from: 0.05; to: 0.28;
+            dur: 1500; dir: alternate; loop: true; easing: easeInOutSine;
           "
         ></a-circle>
       </a-entity>
 
 
-      <!-- ────────────────────────────────────
-           SAĞ TARAF: ELMA GRubu
-           
+      <!-- ─────────────────────────────────
+           SAĞ TARAF: ELMA GRUBU
            position="0.55 0 0.05"
-             x:  0.55  → kutunun sağına 0.55 birim
-             y:  0      → kutuyla aynı dikey hizaya
-             z:  0.05   → hafif öne çıkarak kamera önü
-      ──────────────────────────────────── -->
+              0.55 → kutunun sağına 0.55 birim
+              0    → kutuyla aynı dikey hizası
+              0.05 → kameraya doğru hafif öne
+      ───────────────────────────────── -->
       <a-entity
         id="elma-group"
         position="0.55 0 0.05"
         animation__float="
           property: position;
-          from: 0.55 -0.03 0.05;
-          to: 0.55 0.03 0.05;
-          dur: 2000;
-          dir: alternate;
-          loop: true;
-          easing: easeInOutSine;
+          from: 0.55 -0.04 0.05;
+          to:   0.55  0.04 0.05;
+          dur: 2000; dir: alternate; loop: true; easing: easeInOutSine;
         "
       >
-        <!-- Elma Görseli (2D düzlem) -->
+        <!-- Elma görseli -->
         <a-image
-          id="elma-icon"
           src="#elma-img"
           position="0 0.18 0"
-          width="0.35"
-          height="0.35"
+          width="0.35" height="0.35"
           material="alphaTest: 0.1; transparent: true;"
           animation__spin="
             property: rotation;
-            from: 0 20 0;
-            to: 0 -20 0;
-            dur: 3000;
-            dir: alternate;
-            loop: true;
-            easing: easeInOutSine;
+            from: 0 15 0; to: 0 -15 0;
+            dur: 3000; dir: alternate; loop: true; easing: easeInOutSine;
           "
         ></a-image>
 
-        <!-- "Elma Özü" Yazısı -->
+        <!-- "Elma Özü" etiketi -->
         <a-text
-          id="elma-label"
-          value="🍎 Elma Özü"
-          position="0 -0.08 0"
+          value="Elma Ozu"
+          position="0 -0.07 0"
           align="center"
           color="#f87171"
           width="1.2"
-          font="https://cdn.aframe.io/fonts/Roboto-msdf.json"
-          font-image="https://cdn.aframe.io/fonts/Roboto-msdf.png"
-          shader="msdf"
-          letter-spacing="1"
         ></a-text>
 
-        <!-- Yüzde Yazısı -->
+        <!-- "%50" alt yazı -->
         <a-text
-          id="elma-pct"
           value="%50"
-          position="0 -0.18 0"
+          position="0 -0.17 0"
           align="center"
-          color="rgba(248,113,113,0.7)"
+          color="#ef4444"
           width="0.9"
-          font="https://cdn.aframe.io/fonts/Roboto-msdf.json"
-          font-image="https://cdn.aframe.io/fonts/Roboto-msdf.png"
-          shader="msdf"
         ></a-text>
 
-        <!-- Glow halkası -->
+        <!-- Glow çemberi -->
         <a-circle
-          radius="0.2"
+          radius="0.21"
           position="0 0.18 -0.01"
           material="color: #f87171; transparent: true; opacity: 0.12; shader: flat;"
           animation__pulse="
             property: material.opacity;
-            from: 0.25;
-            to: 0.05;
-            dur: 1500;
-            dir: alternate;
-            loop: true;
-            easing: easeInOutSine;
+            from: 0.28; to: 0.05;
+            dur: 1500; dir: alternate; loop: true; easing: easeInOutSine;
           "
         ></a-circle>
       </a-entity>
 
 
-      <!-- ────────────────────────────────────
-           ÜSTTE: İÇİNDEKİLER BİLGİ PANELİ
-           
-           position="0 0.55 0.05"
-             x: 0     → kutunun tam ortasında
-             y: 0.55  → kutunun üstüne 0.55 birim
-             z: 0.05  → hafif öne
-      ──────────────────────────────────── -->
+      <!-- ─────────────────────────────────
+           ÜST: İÇİNDEKİLER BİLGİ PANELİ
+           position="0 0.6 0.05"
+              0    → kutunun tam ortasında (yatay)
+              0.6  → kutunun üstüne 0.6 birim
+              0.05 → hafif öne
+      ───────────────────────────────── -->
       <a-entity
         id="info-panel"
-        position="0 0.55 0.05"
+        position="0 0.6 0.05"
         animation__entry="
           property: scale;
-          from: 0 0 0;
-          to: 1 1 1;
-          dur: 600;
-          easing: easeOutBack;
+          from: 0.01 0.01 0.01; to: 1 1 1;
+          dur: 500; easing: easeOutBack;
         "
       >
-        <!-- Panel arkaplanı (glassmorphism efekti için koyu yarı saydam kutu) -->
-        <a-rounded
-          id="panel-bg"
-          width="0.95"
-          height="0.36"
-          radius="0.03"
-          position="0 0 -0.001"
-          color="#0d1117"
-          opacity="0.82"
-          shader="flat"
-        ></a-rounded>
+        <!-- Panel arkaplanı (a-plane, basit ve güvenli) -->
+        <a-plane
+          width="1.0" height="0.38"
+          position="0 0 -0.002"
+          material="color: #0d1117; transparent: true; opacity: 0.85; shader: flat;"
+        ></a-plane>
 
-        <!-- Panel başlığı: "İçindekiler" -->
+        <!-- Panel çerçevesi -->
+        <a-plane
+          width="1.02" height="0.40"
+          position="0 0 -0.003"
+          material="color: #f97316; transparent: true; opacity: 0.3; shader: flat;"
+        ></a-plane>
+
+        <!-- Başlık -->
         <a-text
-          id="panel-title"
-          value="İçindekiler"
-          position="0 0.11 0"
+          value="Icindekiler"
+          position="0 0.13 0"
           align="center"
           color="#8b949e"
-          width="1.5"
-          font="https://cdn.aframe.io/fonts/Roboto-msdf.json"
-          font-image="https://cdn.aframe.io/fonts/Roboto-msdf.png"
-          shader="msdf"
-          letter-spacing="2"
+          width="1.6"
         ></a-text>
 
-        <!-- Oran metninin sol yarısı: "🍐 50%" -->
+        <!-- Sol: Armut -->
         <a-text
-          id="panel-armut"
-          value="🍐 %50 Armut"
-          position="-0.23 0 0"
+          value="%50 Armut"
+          position="-0.24 0 0"
           align="center"
           color="#fbbf24"
-          width="1.2"
-          font="https://cdn.aframe.io/fonts/Roboto-msdf.json"
-          font-image="https://cdn.aframe.io/fonts/Roboto-msdf.png"
-          shader="msdf"
+          width="1.15"
         ></a-text>
 
-        <!-- Orta ayırıcı çizgi -->
+        <!-- Orta dikey ayırıcı -->
         <a-plane
-          width="0.003"
-          height="0.2"
+          width="0.004" height="0.22"
           position="0 0 0"
           material="color: #30363d; shader: flat;"
         ></a-plane>
 
-        <!-- Oran metninin sağ yarısı: "🍎 50%" -->
+        <!-- Sağ: Elma -->
         <a-text
-          id="panel-elma"
-          value="🍎 %50 Elma"
-          position="0.23 0 0"
+          value="%50 Elma"
+          position="0.24 0 0"
           align="center"
           color="#f87171"
-          width="1.2"
-          font="https://cdn.aframe.io/fonts/Roboto-msdf.json"
-          font-image="https://cdn.aframe.io/fonts/Roboto-msdf.png"
-          shader="msdf"
+          width="1.15"
         ></a-text>
 
-        <!-- Alt ilerleme çubuğu (armut yarısı) -->
+        <!-- İlerleme çubuğu - Armut (sarı) -->
         <a-plane
-          id="bar-armut"
-          width="0.44"
-          height="0.025"
-          position="-0.235 -0.12 0"
-          material="color: #fbbf24; shader: flat; opacity: 0.9;"
+          width="0.46" height="0.028"
+          position="-0.25 -0.13 0"
+          material="color: #fbbf24; shader: flat;"
           animation__glow="
             property: material.opacity;
-            from: 0.7;
-            to: 1;
-            dur: 1200;
-            dir: alternate;
-            loop: true;
+            from: 0.7; to: 1;
+            dur: 1200; dir: alternate; loop: true;
           "
         ></a-plane>
 
-        <!-- Alt ilerleme çubuğu (elma yarısı) -->
+        <!-- İlerleme çubuğu - Elma (kırmızı) -->
         <a-plane
-          id="bar-elma"
-          width="0.44"
-          height="0.025"
-          position="0.235 -0.12 0"
-          material="color: #f87171; shader: flat; opacity: 0.9;"
+          width="0.46" height="0.028"
+          position="0.25 -0.13 0"
+          material="color: #f87171; shader: flat;"
           animation__glow="
             property: material.opacity;
-            from: 1;
-            to: 0.7;
-            dur: 1200;
-            dir: alternate;
-            loop: true;
+            from: 1; to: 0.7;
+            dur: 1200; dir: alternate; loop: true;
           "
         ></a-plane>
-
-        <!-- Panel kenar çerçevesi (ince border) -->
-        <a-rounded
-          width="0.96"
-          height="0.37"
-          radius="0.033"
-          position="0 0 -0.002"
-          color="#f97316"
-          opacity="0.25"
-          shader="flat"
-        ></a-rounded>
       </a-entity>
 
     </a-entity>
-    <!-- /mindar-image-target #0 -->
+    <!-- /mindar-image-target -->
 
   </a-scene>
 
-  <!-- ══════════════════════════════════════════
-       JAVASCRIPT: UI KONTROL MANTIĞI
-  ══════════════════════════════════════════ -->
   <script>
     (function () {
       'use strict';
 
-      // ── YÜKLEME EKRANIINI GİZLE ─────────────
-      // A-Frame "loaded" eventi: sahne ve tüm
-      // bileşenler hazır olduğunda tetiklenir.
-      const scene = document.querySelector('a-scene');
+      const scene         = document.querySelector('a-scene');
       const loadingScreen = document.getElementById('loading-screen');
-      const scanFrame = document.getElementById('scan-frame');
-      const hintBar = document.getElementById('hint-bar');
+      const scanFrame     = document.getElementById('scan-frame');
+      const hintBar       = document.getElementById('hint-bar');
 
       function hideLoading() {
         loadingScreen.classList.add('hidden');
-        // 600ms geçiş bittikten sonra DOM'dan kaldır
         setTimeout(() => { loadingScreen.style.display = 'none'; }, 700);
       }
 
-      if (scene.hasLoaded) {
-        hideLoading();
-      } else {
-        scene.addEventListener('loaded', hideLoading);
-      }
+      // A-Frame sahnesi hazır olunca yükleme ekranını kaldır
+      if (scene.hasLoaded) { hideLoading(); }
+      else { scene.addEventListener('loaded', hideLoading); }
 
-      // ── HEDEF BULUNDU/KAYBOLDU EVENTLARI ────
-      // MindAR, hedef görüntü tanındığında
-      // "targetFound" eventini gönderir.
+      // Hedef bulununca çerçeve ve ipucunu gizle
       const target = document.querySelector('[mindar-image-target]');
-
       if (target) {
         target.addEventListener('targetFound', () => {
-          console.log('🎯 Hedef bulundu - AR içeriği gösteriliyor');
-          // Tarama çerçevesini gizle, ipucu çubuğunu gizle
           scanFrame.style.opacity = '0';
-          hintBar.style.opacity = '0';
+          hintBar.style.opacity   = '0';
         });
-
         target.addEventListener('targetLost', () => {
-          console.log('👁️ Hedef kayboldu - Tarama moduna dön');
-          // Tarama çerçevesini ve ipucu çubuğunu tekrar göster
           scanFrame.style.opacity = '1';
-          hintBar.style.opacity = '1';
+          hintBar.style.opacity   = '1';
         });
       }
 
-      // ── HATA YÖNETİMİ ───────────────────────
-      // Kamera izni reddedilirse kullanıcıya
-      // anlamlı bir mesaj göster
-      scene.addEventListener('arError', (evt) => {
-        console.error('AR Hatası:', evt.detail);
-        loadingScreen.querySelector('.loading-subtitle').textContent =
-          '⚠️ Kamera erişimi reddedildi veya bir hata oluştu. ' +
-          'Lütfen tarayıcı ayarlarından kamera iznini verin ve sayfayı yenileyin.';
-        loadingScreen.style.opacity = '1';
+      // Kamera / AR hatası
+      scene.addEventListener('arError', () => {
+        const sub = loadingScreen.querySelector('.loading-subtitle');
+        sub.innerHTML = '⚠️ Kamera erişimi reddedildi veya bir hata oluştu.<br>Tarayıcı ayarlarından kamera iznini ver ve sayfayı yenile.';
         loadingScreen.style.display = 'flex';
         loadingScreen.classList.remove('hidden');
+        loadingScreen.style.opacity = '1';
       });
 
     })();
