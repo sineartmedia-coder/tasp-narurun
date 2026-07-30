@@ -6,11 +6,9 @@
   <meta name="theme-color" content="#0d1117" />
   <title>Meyve Suyu AR</title>
 
-  <!--
-    ÖNEMLI: Sadece MindAR bundle — A-Frame dahil.
-    Ayrıca aframe.min.js EKLEME!
-  -->
-  <script src="https://unpkg.com/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+  <!-- DOĞRU SIRA: Önce A-Frame, sonra MindAR eklentisi -->
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
