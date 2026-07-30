@@ -57,7 +57,7 @@
   </div>
 
   <a-scene
-    mindar-image="imageTargetSrc: ./targets.mind; autoStart: true; uiLoading: no; uiScanning: no; uiError: no; filterMinCF: 0.0001; filterBeta: 0.001; warmupTolerance: 5; missTolerance: 10;"
+    mindar-image="imageTargetSrc: ./targets.mind; autoStart: true; uiLoading: no; uiScanning: no; uiError: no;"
     color-space="sRGB"
     renderer="colorManagement: true; physicallyCorrectLights: true"
     vr-mode-ui="enabled: false"
@@ -74,19 +74,15 @@
 
       <!--
         ARMUT — SOL TARAF
-        position x=-0.45: kutunun soluna 0.45 birim
-        position y=0    : kutuyla aynı yükseklik
-        position z=0    : z=0 en stabil tracking noktası
-
-        billboard component: her zaman kameraya dönük durur,
-        telefon açısı değişince DÖNSÜN değil CEPHE korusun
+        Daha yakına çekildi (x=-0.35) ve billboard kaldırıldı.
+        Bu sayede rotasyon sapmaları zıplamaya neden olmaz.
       -->
-      <a-entity id="armut-group" position="-0.45 0 0" billboard>
-        <!-- Arka plan kutusu — içeriği okumayı kolaylaştırır -->
+      <a-entity id="armut-group" position="-0.35 0 0.05">
+        <!-- Arka plan kutusu -->
         <a-plane
-          width="0.42" height="0.42"
+          width="0.38" height="0.38"
           position="0 0.1 -0.01"
-          material="color:#0d1117; transparent:true; opacity:0.75; shader:flat;">
+          material="color:#0d1117; transparent:true; opacity:0.85; shader:flat;">
         </a-plane>
 
         <!-- Armut görseli -->
@@ -105,15 +101,14 @@
 
       <!--
         ELMA — SAĞ TARAF
-        position x=+0.45: kutunun sağına 0.45 birim
-        billboard: kameraya hep dönük
+        Daha yakına çekildi (x=+0.35)
       -->
-      <a-entity id="elma-group" position="0.45 0 0" billboard>
+      <a-entity id="elma-group" position="0.35 0 0.05">
         <!-- Arka plan kutusu -->
         <a-plane
-          width="0.42" height="0.42"
+          width="0.38" height="0.38"
           position="0 0.1 -0.01"
-          material="color:#0d1117; transparent:true; opacity:0.75; shader:flat;">
+          material="color:#0d1117; transparent:true; opacity:0.85; shader:flat;">
         </a-plane>
 
         <!-- Elma görseli -->
@@ -132,15 +127,14 @@
 
       <!--
         BİLGİ PANELİ — ÜST
-        position y=+0.58: kutunun tepesine 0.58 birim yukarı
-        billboard: her açıdan okunabilir
+        Kutunun tam üstünde olduğu için zaten stabil kalacaktır.
       -->
-      <a-entity id="panel" position="0 0.58 0" billboard>
+      <a-entity id="panel" position="0 0.55 0.05">
         <!-- Panel zemini -->
         <a-plane
-          width="0.95" height="0.34"
+          width="0.9" height="0.32"
           position="0 0 -0.002"
-          material="color:#0d1117; transparent:true; opacity:0.88; shader:flat;">
+          material="color:#0d1117; transparent:true; opacity:0.9; shader:flat;">
         </a-plane>
         <!-- Panel kenarlığı -->
         <a-plane
@@ -167,8 +161,8 @@
 
     <!-- ── HEDEF #1: KASK (Açı 1) ── -->
     <a-entity mindar-image-target="targetIndex: 1">
-      <a-entity position="0 0.5 0" billboard>
-        <a-plane width="1.1" height="0.4" position="0 0 -0.002" material="color:#0d1117; transparent:true; opacity:0.88; shader:flat;"></a-plane>
+      <a-entity position="0 0.5 0.05">
+        <a-plane width="1.1" height="0.4" position="0 0 -0.002" material="color:#0d1117; transparent:true; opacity:0.9; shader:flat;"></a-plane>
         <a-plane width="1.13" height="0.43" position="0 0 -0.003" material="color:#3b82f6; transparent:true; opacity:0.4; shader:flat;"></a-plane>
         <a-text value="PRO BIKER KASK" position="0 0.1 0" align="center" color="#60a5fa" width="1.8"></a-text>
         <a-text value="Tam Koruma & Aerodinamik" position="0 0.01 0" align="center" color="#94a3b8" width="1.0"></a-text>
@@ -178,8 +172,8 @@
 
     <!-- ── HEDEF #2: KASK (Açı 2) ── -->
     <a-entity mindar-image-target="targetIndex: 2">
-      <a-entity position="0 0.5 0" billboard>
-        <a-plane width="1.1" height="0.4" position="0 0 -0.002" material="color:#0d1117; transparent:true; opacity:0.88; shader:flat;"></a-plane>
+      <a-entity position="0 0.5 0.05">
+        <a-plane width="1.1" height="0.4" position="0 0 -0.002" material="color:#0d1117; transparent:true; opacity:0.9; shader:flat;"></a-plane>
         <a-plane width="1.13" height="0.43" position="0 0 -0.003" material="color:#3b82f6; transparent:true; opacity:0.4; shader:flat;"></a-plane>
         <a-text value="PRO BIKER KASK" position="0 0.1 0" align="center" color="#60a5fa" width="1.8"></a-text>
         <a-text value="Tam Koruma & Aerodinamik" position="0 0.01 0" align="center" color="#94a3b8" width="1.0"></a-text>
@@ -189,8 +183,8 @@
 
     <!-- ── HEDEF #3: KASK (Açı 3) ── -->
     <a-entity mindar-image-target="targetIndex: 3">
-      <a-entity position="0 0.5 0" billboard>
-        <a-plane width="1.1" height="0.4" position="0 0 -0.002" material="color:#0d1117; transparent:true; opacity:0.88; shader:flat;"></a-plane>
+      <a-entity position="0 0.5 0.05">
+        <a-plane width="1.1" height="0.4" position="0 0 -0.002" material="color:#0d1117; transparent:true; opacity:0.9; shader:flat;"></a-plane>
         <a-plane width="1.13" height="0.43" position="0 0 -0.003" material="color:#3b82f6; transparent:true; opacity:0.4; shader:flat;"></a-plane>
         <a-text value="PRO BIKER KASK" position="0 0.1 0" align="center" color="#60a5fa" width="1.8"></a-text>
         <a-text value="Tam Koruma & Aerodinamik" position="0 0.01 0" align="center" color="#94a3b8" width="1.0"></a-text>
@@ -201,19 +195,6 @@
   </a-scene>
 
   <script>
-    // ── BILLBOARD COMPONENT ──────────────────────────────
-    // İçeriklerin her zaman kameraya dönük kalmasını sağlar.
-    // 3D uzayda konumlar sabit kalır, sadece rotasyon kameraya göre güncellenir.
-    AFRAME.registerComponent('billboard', {
-      tick: function () {
-        const camera = this.el.sceneEl.camera;
-        if (camera) {
-          // Kamera quaternion'ını kopyala — içerik kameraya baksın
-          this.el.object3D.quaternion.copy(camera.quaternion);
-        }
-      }
-    });
-
     // ── HEDEF EVENTLARI ─────────────────────────────────
     document.querySelector('a-scene').addEventListener('loaded', function () {
       const target  = document.querySelector('[mindar-image-target]');
