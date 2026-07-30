@@ -146,35 +146,37 @@
         speed: {type: 'number', default: 0.2}
       },
       init: function () {
-        this.target3D = this.data.target.object3D;
-        this.el3D = this.el.object3D;
         this.wasVisible = false;
-        
         // Başlangıçta görünmez yap
-        this.el3D.visible = false;
+        this.el.object3D.visible = false;
       },
       tick: function (time, timeDelta) {
-        if (!this.target3D) return;
+        const targetEl = this.data.target;
+        // Hedef obje veya 3D nesnesi henüz yüklenmediyse bekle
+        if (!targetEl || !targetEl.object3D) return;
+
+        const target3D = targetEl.object3D;
+        const el3D = this.el.object3D;
 
         // Hedef AR noktasının görünürlüğünü kontrol et
-        const isVisible = this.target3D.visible;
-        this.el3D.visible = isVisible;
+        const isVisible = target3D.visible;
+        el3D.visible = isVisible;
 
         if (isVisible) {
           if (!this.wasVisible) {
             // Hedef kameraya yeni girdiyse, animasyonsuz anında ışınla
-            this.el3D.position.copy(this.target3D.position);
-            this.el3D.quaternion.copy(this.target3D.quaternion);
-            this.el3D.scale.copy(this.target3D.scale);
+            el3D.position.copy(target3D.position);
+            el3D.quaternion.copy(target3D.quaternion);
+            el3D.scale.copy(target3D.scale);
             this.wasVisible = true;
           } else {
-            // Zaten takip ediliyorsa, yumuşak geçiş yap (titremeyi sönümler)
-            // Cihazın FPS'ine göre (genelde 16ms) hesaplanan matematiksel Lerp
-            const lerpFactor = Math.min(this.data.speed * (timeDelta / 16.66), 1.0);
+            // Zaman sapmasını önlemek için fallback
+            const dt = timeDelta || 16.66;
+            const lerpFactor = Math.min(this.data.speed * (dt / 16.66), 1.0);
             
-            this.el3D.position.lerp(this.target3D.position, lerpFactor);
-            this.el3D.quaternion.slerp(this.target3D.quaternion, lerpFactor);
-            this.el3D.scale.lerp(this.target3D.scale, lerpFactor);
+            el3D.position.lerp(target3D.position, lerpFactor);
+            el3D.quaternion.slerp(target3D.quaternion, lerpFactor);
+            el3D.scale.lerp(target3D.scale, lerpFactor);
           }
         } else {
           this.wasVisible = false;
@@ -184,18 +186,21 @@
 
     // ── HEDEF EVENTLARI ─────────────────────────────────
     document.querySelector('a-scene').addEventListener('loaded', function () {
-      const target  = document.querySelector('[mindar-image-target]');
+      const targets = document.querySelectorAll('[mindar-image-target]');
       const frameBox = document.getElementById('frame-box');
       const uiBottom = document.getElementById('ui-bottom');
-      if (!target) return;
+      
+      if (targets.length === 0) return;
 
-      target.addEventListener('targetFound', () => {
-        frameBox.style.opacity = '0';
-        uiBottom.style.opacity = '0';
-      });
-      target.addEventListener('targetLost', () => {
-        frameBox.style.opacity = '1';
-        uiBottom.style.opacity = '1';
+      targets.forEach(target => {
+        target.addEventListener('targetFound', () => {
+          frameBox.style.opacity = '0';
+          uiBottom.style.opacity = '0';
+        });
+        target.addEventListener('targetLost', () => {
+          frameBox.style.opacity = '1';
+          uiBottom.style.opacity = '1';
+        });
       });
     });
   </script>
