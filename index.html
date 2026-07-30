@@ -57,7 +57,7 @@
   </div>
 
   <a-scene
-    mindar-image="imageTargetSrc: ./targets.mind; autoStart: true; uiLoading: no; uiScanning: no; uiError: no; filterMinCF: 0.0001; filterBeta: 0.001;"
+    mindar-image="imageTargetSrc: ./targets.mind; autoStart: true; uiLoading: no; uiScanning: no; uiError: no;"
     color-space="sRGB"
     renderer="colorManagement: true; physicallyCorrectLights: true"
     vr-mode-ui="enabled: false"
@@ -70,97 +70,43 @@
 
     <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-    <a-entity mindar-image-target="targetIndex: 0">
+    <!-- TAKİP NOKTALARI (GÖRÜNMEZ ÇAPALAR) -->
+    <a-entity id="tracker-0" mindar-image-target="targetIndex: 0"></a-entity>
+    <a-entity id="tracker-1" mindar-image-target="targetIndex: 1"></a-entity>
 
-      <!--
-        ARMUT — SOL TARAF
-        Daha yakına çekildi (x=-0.35) ve billboard kaldırıldı.
-        Bu sayede rotasyon sapmaları zıplamaya neden olmaz.
-      -->
+    <!-- ── HEDEF #0 GÖRSELLERİ (MEYVE SUYU) ── -->
+    <a-entity id="visual-0" smooth-tracker="target: #tracker-0; speed: 0.25">
+      <!-- ARMUT — SOL TARAF -->
       <a-entity id="armut-group" position="-0.35 0 0.05">
-        <!-- Arka plan kutusu -->
-        <a-plane
-          width="0.38" height="0.38"
-          position="0 0.1 -0.01"
-          material="color:#0d1117; transparent:true; opacity:0.85; shader:flat;">
-        </a-plane>
-
-        <!-- Armut görseli -->
-        <a-image
-          src="#armut-img"
-          position="0 0.18 0"
-          width="0.30" height="0.30"
-          material="alphaTest:0.5; transparent:true; depthWrite:false;">
-        </a-image>
-
-        <!-- Etiketler -->
+        <a-plane width="0.38" height="0.38" position="0 0.1 -0.01" material="color:#0d1117; transparent:true; opacity:0.85; shader:flat;"></a-plane>
+        <a-image src="#armut-img" position="0 0.18 0" width="0.30" height="0.30" material="alphaTest:0.5; transparent:true; depthWrite:false;"></a-image>
         <a-text value="Armut Ozu" position="0 -0.02 0" align="center" color="#fbbf24" width="1.1"></a-text>
-        <a-text value="%50"       position="0 -0.10 0" align="center" color="#f59e0b" width="0.85"></a-text>
+        <a-text value="%50" position="0 -0.10 0" align="center" color="#f59e0b" width="0.85"></a-text>
       </a-entity>
 
-
-      <!--
-        ELMA — SAĞ TARAF
-        Daha yakına çekildi (x=+0.35)
-      -->
+      <!-- ELMA — SAĞ TARAF -->
       <a-entity id="elma-group" position="0.35 0 0.05">
-        <!-- Arka plan kutusu -->
-        <a-plane
-          width="0.38" height="0.38"
-          position="0 0.1 -0.01"
-          material="color:#0d1117; transparent:true; opacity:0.85; shader:flat;">
-        </a-plane>
-
-        <!-- Elma görseli -->
-        <a-image
-          src="#elma-img"
-          position="0 0.18 0"
-          width="0.30" height="0.30"
-          material="alphaTest:0.5; transparent:true; depthWrite:false;">
-        </a-image>
-
-        <!-- Etiketler -->
+        <a-plane width="0.38" height="0.38" position="0 0.1 -0.01" material="color:#0d1117; transparent:true; opacity:0.85; shader:flat;"></a-plane>
+        <a-image src="#elma-img" position="0 0.18 0" width="0.30" height="0.30" material="alphaTest:0.5; transparent:true; depthWrite:false;"></a-image>
         <a-text value="Elma Ozu" position="0 -0.02 0" align="center" color="#f87171" width="1.1"></a-text>
-        <a-text value="%50"      position="0 -0.10 0" align="center" color="#ef4444" width="0.85"></a-text>
+        <a-text value="%50" position="0 -0.10 0" align="center" color="#ef4444" width="0.85"></a-text>
       </a-entity>
 
-
-      <!--
-        BİLGİ PANELİ — ÜST
-        Kutunun tam üstünde olduğu için zaten stabil kalacaktır.
-      -->
+      <!-- BİLGİ PANELİ — ÜST -->
       <a-entity id="panel" position="0 0.55 0.05">
-        <!-- Panel zemini -->
-        <a-plane
-          width="0.9" height="0.32"
-          position="0 0 -0.002"
-          material="color:#0d1117; transparent:true; opacity:0.9; shader:flat;">
-        </a-plane>
-        <!-- Panel kenarlığı -->
-        <a-plane
-          width="0.97" height="0.36"
-          position="0 0 -0.003"
-          material="color:#f97316; transparent:true; opacity:0.3; shader:flat;">
-        </a-plane>
-
+        <a-plane width="0.9" height="0.32" position="0 0 -0.002" material="color:#0d1117; transparent:true; opacity:0.9; shader:flat;"></a-plane>
+        <a-plane width="0.97" height="0.36" position="0 0 -0.003" material="color:#f97316; transparent:true; opacity:0.3; shader:flat;"></a-plane>
         <a-text value="Icindekiler" position="0 0.11 0" align="center" color="#8b949e" width="1.5"></a-text>
-
-        <!-- Sol: Armut -->
         <a-text value="%50 Armut" position="-0.22 -0.01 0" align="center" color="#fbbf24" width="1.0"></a-text>
-        <!-- Dikey çizgi -->
         <a-plane width="0.003" height="0.18" material="color:#30363d;shader:flat;"></a-plane>
-        <!-- Sağ: Elma -->
         <a-text value="%50 Elma" position="0.22 -0.01 0" align="center" color="#f87171" width="1.0"></a-text>
-
-        <!-- İlerleme çubukları -->
         <a-plane width="0.42" height="0.022" position="-0.23 -0.12 0" material="color:#fbbf24;shader:flat;"></a-plane>
         <a-plane width="0.42" height="0.022" position=" 0.23 -0.12 0" material="color:#f87171;shader:flat;"></a-plane>
       </a-entity>
-
     </a-entity>
 
-    <!-- ── HEDEF #1: KASK (Açı 1) ── -->
-    <a-entity mindar-image-target="targetIndex: 1">
+    <!-- ── HEDEF #1 GÖRSELLERİ (KASK) ── -->
+    <a-entity id="visual-1" smooth-tracker="target: #tracker-1; speed: 0.25">
       <a-entity position="0 0.5 0.05">
         <a-plane width="1.1" height="0.4" position="0 0 -0.002" material="color:#0d1117; transparent:true; opacity:0.9; shader:flat;"></a-plane>
         <a-plane width="1.13" height="0.43" position="0 0 -0.003" material="color:#3b82f6; transparent:true; opacity:0.4; shader:flat;"></a-plane>
@@ -173,6 +119,49 @@
   </a-scene>
 
   <script>
+    // ── KESİN TİTREME ÇÖZÜCÜ: YUMUŞAK TAKİP SİSTEMİ ──
+    AFRAME.registerComponent('smooth-tracker', {
+      schema: {
+        target: {type: 'selector'},
+        speed: {type: 'number', default: 0.2}
+      },
+      init: function () {
+        this.target3D = this.data.target.object3D;
+        this.el3D = this.el.object3D;
+        this.wasVisible = false;
+        
+        // Başlangıçta görünmez yap
+        this.el3D.visible = false;
+      },
+      tick: function (time, timeDelta) {
+        if (!this.target3D) return;
+
+        // Hedef AR noktasının görünürlüğünü kontrol et
+        const isVisible = this.target3D.visible;
+        this.el3D.visible = isVisible;
+
+        if (isVisible) {
+          if (!this.wasVisible) {
+            // Hedef kameraya yeni girdiyse, animasyonsuz anında ışınla
+            this.el3D.position.copy(this.target3D.position);
+            this.el3D.quaternion.copy(this.target3D.quaternion);
+            this.el3D.scale.copy(this.target3D.scale);
+            this.wasVisible = true;
+          } else {
+            // Zaten takip ediliyorsa, yumuşak geçiş yap (titremeyi sönümler)
+            // Cihazın FPS'ine göre (genelde 16ms) hesaplanan matematiksel Lerp
+            const lerpFactor = Math.min(this.data.speed * (timeDelta / 16.66), 1.0);
+            
+            this.el3D.position.lerp(this.target3D.position, lerpFactor);
+            this.el3D.quaternion.slerp(this.target3D.quaternion, lerpFactor);
+            this.el3D.scale.lerp(this.target3D.scale, lerpFactor);
+          }
+        } else {
+          this.wasVisible = false;
+        }
+      }
+    });
+
     // ── HEDEF EVENTLARI ─────────────────────────────────
     document.querySelector('a-scene').addEventListener('loaded', function () {
       const target  = document.querySelector('[mindar-image-target]');
