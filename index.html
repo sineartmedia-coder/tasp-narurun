@@ -46,14 +46,14 @@
   <div id="splash">
     <div style="font-size:50px">🍹</div>
     <h1>Meyve Suyu AR</h1>
-    <p>Meyve suyu kutusunu kameraya tut, içindekiler canlanır!</p>
+    <p>Meyve suyu kutusunu veya motorcu kaskını kameraya tut!</p>
     <button onclick="document.getElementById('splash').classList.add('out')">📷 Kamerayı Başlat</button>
     <p style="font-size:11px;color:#555">Kamera izni istenecek — İzin Ver'e bas</p>
   </div>
 
   <div id="ui">
     <div id="frame-box"></div>
-    <div id="ui-bottom">📦 Meyve suyu kutusunu göster</div>
+    <div id="ui-bottom">📦 Meyve suyu kutusunu veya Kaskı göster</div>
   </div>
 
   <a-scene
@@ -164,6 +164,40 @@
       </a-entity>
 
     </a-entity>
+
+    <!-- ── HEDEF #1: KASK (Açı 1) ── -->
+    <a-entity mindar-image-target="targetIndex: 1">
+      <a-entity position="0 0.5 0" billboard>
+        <a-plane width="1.1" height="0.4" position="0 0 -0.002" material="color:#0d1117; transparent:true; opacity:0.88; shader:flat;"></a-plane>
+        <a-plane width="1.13" height="0.43" position="0 0 -0.003" material="color:#3b82f6; transparent:true; opacity:0.4; shader:flat;"></a-plane>
+        <a-text value="PRO BIKER KASK" position="0 0.1 0" align="center" color="#60a5fa" width="1.8"></a-text>
+        <a-text value="Tam Koruma & Aerodinamik" position="0 0.01 0" align="center" color="#94a3b8" width="1.0"></a-text>
+        <a-text value="Fiyat: 2,999 TL" position="0 -0.1 0" align="center" color="#fbbf24" width="1.5"></a-text>
+      </a-entity>
+    </a-entity>
+
+    <!-- ── HEDEF #2: KASK (Açı 2) ── -->
+    <a-entity mindar-image-target="targetIndex: 2">
+      <a-entity position="0 0.5 0" billboard>
+        <a-plane width="1.1" height="0.4" position="0 0 -0.002" material="color:#0d1117; transparent:true; opacity:0.88; shader:flat;"></a-plane>
+        <a-plane width="1.13" height="0.43" position="0 0 -0.003" material="color:#3b82f6; transparent:true; opacity:0.4; shader:flat;"></a-plane>
+        <a-text value="PRO BIKER KASK" position="0 0.1 0" align="center" color="#60a5fa" width="1.8"></a-text>
+        <a-text value="Tam Koruma & Aerodinamik" position="0 0.01 0" align="center" color="#94a3b8" width="1.0"></a-text>
+        <a-text value="Fiyat: 2,999 TL" position="0 -0.1 0" align="center" color="#fbbf24" width="1.5"></a-text>
+      </a-entity>
+    </a-entity>
+
+    <!-- ── HEDEF #3: KASK (Açı 3) ── -->
+    <a-entity mindar-image-target="targetIndex: 3">
+      <a-entity position="0 0.5 0" billboard>
+        <a-plane width="1.1" height="0.4" position="0 0 -0.002" material="color:#0d1117; transparent:true; opacity:0.88; shader:flat;"></a-plane>
+        <a-plane width="1.13" height="0.43" position="0 0 -0.003" material="color:#3b82f6; transparent:true; opacity:0.4; shader:flat;"></a-plane>
+        <a-text value="PRO BIKER KASK" position="0 0.1 0" align="center" color="#60a5fa" width="1.8"></a-text>
+        <a-text value="Tam Koruma & Aerodinamik" position="0 0.01 0" align="center" color="#94a3b8" width="1.0"></a-text>
+        <a-text value="Fiyat: 2,999 TL" position="0 -0.1 0" align="center" color="#fbbf24" width="1.5"></a-text>
+      </a-entity>
+    </a-entity>
+
   </a-scene>
 
   <script>
